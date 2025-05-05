@@ -1,0 +1,128 @@
+<div class="container-fluid pt-3">
+  <div class="row mb-3">
+    <div class="col">
+      <h2>My Shifts</h2>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header bg-light">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Date Range</label>
+          <div class="input-group">
+            <input 
+              class="form-control" 
+              placeholder="yyyy-mm-dd"
+              name="dpFromDate"
+              [value]="dateFormatter.format(fromDate)"
+              (input)="fromDate = validateInput(fromDate, $any($event).target.value)">
+            <span class="input-group-text">to</span>
+            <input 
+              class="form-control" 
+              placeholder="yyyy-mm-dd"
+              name="dpToDate"
+              [value]="toDate ? dateFormatter.format(toDate) : ''"
+              (input)="toDate = validateInput(toDate, $any($event).target.value)">
+            <button class="btn btn-outline-secondary" (click)="loadShifts()">
+              <i class="bi bi-calendar-check"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Status</label>
+          <select 
+            class="form-select" 
+            [(ngModel)]="filterStatus"
+            (change)="applyFilters()">
+            <option value="ALL">All Statuses</option>
+            <option value="ASSIGNED">Assigned</option>
+            <option value="CONFIRMED">Confirmed</option>
+            <option value="DECLINED">Declined</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Location</th>
+              <th>Shift Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="loading">
+              <td colspan="6" class="text-center">
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && filteredShifts.length === 0">
+              <td colspan="6" class="text-center">No shifts found for the selected criteria.</td>
+            </tr>
+            <tr *ngFor="let employeeShift of filteredShifts">
+              <td>{{ employeeShift.shift.shiftDate | date:'MMM d, yyyy' }}</td>
+              <td>{{ employeeShift.shift.startTime }} - {{ employeeShift.shift.endTime }}</td>
+              <td>{{ employeeShift.shift.location.name }}</td>
+              <td>
+                <span 
+                  class="badge rounded-pill" 
+                  [style.background-color]="employeeShift.shift.shiftType.color">
+                  {{ employeeShift.shift.shiftType.name }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="getStatusBadgeClass(employeeShift.status)">
+                  {{ employeeShift.status }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <!-- For assigned shifts, show confirm/decline buttons -->
+                  <ng-container *ngIf="employeeShift.status === 'ASSIGNED'">
+                    <button 
+                      class="btn btn-sm btn-outline-success" 
+                      (click)="confirmShift(employeeShift.id!)">
+                      <i class="bi bi-check-circle"></i>
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-danger" 
+                      (click)="declineShift(employeeShift.id!)">
+                      <i class="bi bi-x-circle"></i>
+                    </button>
+                  </ng-container>
+                  
+                  <!-- For confirmed shifts, show clock in/out buttons -->
+                  <ng-container *ngIf="employeeShift.status === 'CONFIRMED'">
+                    <button 
+                      *ngIf="!employeeShift.clockInTime" 
+                      class="btn btn-sm btn-outline-primary" 
+                      (click)="clockIn(employeeShift.id!)">
+                      <i class="bi bi-box-arrow-in-right"></i> Clock In
+                    </button>
+                    <button 
+                      *ngIf="employeeShift.clockInTime && !employeeShift.clockOutTime" 
+                      class="btn btn-sm btn-outline-secondary" 
+                      (click)="clockOut(employeeShift.id!)">
+                      <i class="bi bi-box-arrow-left"></i> Clock Out
+                    </button>
+                  </ng-container>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

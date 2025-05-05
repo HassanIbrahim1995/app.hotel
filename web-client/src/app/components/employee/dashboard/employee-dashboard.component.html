@@ -1,0 +1,187 @@
+<div class="container-fluid py-4">
+  <h1 class="mb-4">Employee Dashboard</h1>
+  
+  <div class="row">
+    <!-- Upcoming Shifts Summary -->
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Upcoming Shifts</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="upcomingShifts.length === 0" class="text-center text-muted py-5">
+            <i class="bi bi-calendar-x mb-3" style="font-size: 2rem;"></i>
+            <p>No upcoming shifts scheduled for you.</p>
+          </div>
+          
+          <ul class="list-group list-group-flush" *ngIf="upcomingShifts.length > 0">
+            <li *ngFor="let shift of upcomingShifts" class="list-group-item d-flex justify-content-between align-items-start"
+                [ngStyle]="{'border-left': '4px solid ' + shift.shift.shiftType.color}">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">{{ shift.shift.shiftDate | date:'E, MMM d' }}</div>
+                <span>{{ shift.shift.startTime | date:'h:mm a' }} - {{ shift.shift.endTime | date:'h:mm a' }}</span>
+                <div class="text-secondary">{{ shift.shift.location.name }}</div>
+              </div>
+              <span class="badge rounded-pill" [ngClass]="getStatusClass(shift.status)">
+                {{ shift.status }}
+              </span>
+            </li>
+          </ul>
+          
+          <div class="d-grid gap-2 mt-3" *ngIf="upcomingShifts.length > 0">
+            <a routerLink="/shifts" class="btn btn-outline-primary">View All Shifts</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Vacation Requests -->
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0"><i class="bi bi-airplane me-2"></i>Vacation Requests</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="vacationRequests.length === 0" class="text-center text-muted py-5">
+            <i class="bi bi-airplane-engines mb-3" style="font-size: 2rem;"></i>
+            <p>No pending vacation requests.</p>
+          </div>
+          
+          <ul class="list-group list-group-flush" *ngIf="vacationRequests.length > 0">
+            <li *ngFor="let request of vacationRequests" class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">{{ request.startDate | date:'MMM d' }} - {{ request.endDate | date:'MMM d, yyyy' }}</div>
+                <div class="text-secondary">{{ request.reason || 'No reason provided' }}</div>
+              </div>
+              <span class="badge rounded-pill" [ngClass]="getVacationStatusClass(request.status)">
+                {{ request.status }}
+              </span>
+            </li>
+          </ul>
+          
+          <div class="d-grid gap-2 mt-3">
+            <a routerLink="/vacation-requests" class="btn btn-outline-info">Manage Vacation</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0"><i class="bi bi-lightning-charge me-2"></i>Quick Actions</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-3">
+            <a routerLink="/calendar" class="btn btn-outline-primary d-flex align-items-center justify-content-between">
+              <span><i class="bi bi-calendar3 me-2"></i>View My Calendar</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+            
+            <a routerLink="/vacation-requests/new" class="btn btn-outline-info d-flex align-items-center justify-content-between">
+              <span><i class="bi bi-airplane-engines me-2"></i>Request Vacation</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+            
+            <a routerLink="/shifts" class="btn btn-outline-success d-flex align-items-center justify-content-between">
+              <span><i class="bi bi-clock-history me-2"></i>Manage My Shifts</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+            
+            <a routerLink="/profile" class="btn btn-outline-secondary d-flex align-items-center justify-content-between">
+              <span><i class="bi bi-person-gear me-2"></i>Update Profile</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <!-- Weekly Schedule Preview -->
+    <div class="col-md-8 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="bi bi-calendar-week me-2"></i>This Week's Schedule</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th *ngFor="let day of weekDays" class="text-center">
+                    {{ day.date | date:'E' }}<br>
+                    <small>{{ day.date | date:'MMM d' }}</small>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td *ngFor="let day of weekDays" class="align-top" style="height: 120px;">
+                    <div *ngIf="getShiftForDay(day.date) as shift" 
+                        class="p-2 rounded-2 h-100 d-flex flex-column" 
+                        [ngStyle]="{'background-color': shift.shift.shiftType.color + '25', 'border-left': '3px solid ' + shift.shift.shiftType.color}">
+                      <div class="fw-bold">{{ shift.shift.shiftType.name }}</div>
+                      <div class="small">{{ shift.shift.startTime | date:'h:mm a' }} - {{ shift.shift.endTime | date:'h:mm a' }}</div>
+                      <div class="small text-muted mt-auto">{{ shift.shift.location.name }}</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-grid gap-2">
+            <a routerLink="/calendar" class="btn btn-outline-primary">View Full Calendar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Notifications -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="mb-0 d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-bell me-2"></i>Notifications</span>
+            <span class="badge bg-danger rounded-pill" *ngIf="unreadNotificationsCount > 0">{{ unreadNotificationsCount }}</span>
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div *ngIf="notifications.length === 0" class="text-center text-muted py-5">
+            <i class="bi bi-bell-slash mb-3" style="font-size: 2rem;"></i>
+            <p>No new notifications</p>
+          </div>
+          
+          <ul class="list-group list-group-flush" *ngIf="notifications.length > 0">
+            <li *ngFor="let notification of notifications" 
+                class="list-group-item list-group-item-action d-flex justify-content-between align-items-start"
+                [ngClass]="{'bg-light': !notification.read}">
+              <div class="ms-2 me-auto">
+                <div class="d-flex align-items-center">
+                  <span class="badge rounded-pill me-2" [ngClass]="getNotificationTypeClass(notification.type)">
+                    <i [ngClass]="getNotificationTypeIcon(notification.type)"></i>
+                  </span>
+                  <div class="fw-bold">{{ notification.message }}</div>
+                </div>
+                <small class="text-muted">{{ notification.createdAt | date:'MMM d, h:mm a' }}</small>
+              </div>
+              <div *ngIf="!notification.read">
+                <button class="btn btn-sm btn-outline-secondary" (click)="markAsRead(notification.id)">
+                  Mark Read
+                </button>
+              </div>
+            </li>
+          </ul>
+          
+          <div class="d-grid gap-2 p-3" *ngIf="notifications.length > 0">
+            <button class="btn btn-sm btn-outline-secondary" (click)="markAllAsRead()" [disabled]="unreadNotificationsCount === 0">
+              Mark All as Read
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

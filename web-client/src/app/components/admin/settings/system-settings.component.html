@@ -1,0 +1,350 @@
+<div class="container-fluid pt-3">
+  <div class="row mb-3">
+    <div class="col">
+      <h2>System Settings</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header bg-light p-0">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [ngClass]="{'active': activeTab === 'general'}"
+            (click)="setActiveTab('general')">
+            <i class="bi bi-gear me-1"></i> General
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [ngClass]="{'active': activeTab === 'notifications'}"
+            (click)="setActiveTab('notifications')">
+            <i class="bi bi-bell me-1"></i> Notifications
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [ngClass]="{'active': activeTab === 'scheduling'}"
+            (click)="setActiveTab('scheduling')">
+            <i class="bi bi-calendar-week me-1"></i> Scheduling
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="card-body">
+      <div [ngSwitch]="activeTab">
+        <!-- General Settings Tab -->
+        <div *ngSwitchCase="'general'">
+          <form [formGroup]="generalSettingsForm">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="companyName" class="form-label">Company Name</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="companyName" 
+                  formControlName="companyName">
+                <div *ngIf="generalSettingsForm.get('companyName')?.invalid && generalSettingsForm.get('companyName')?.touched" class="text-danger mt-1 small">
+                  Company name is required
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="timeZone" class="form-label">Time Zone</label>
+                <select 
+                  class="form-select" 
+                  id="timeZone" 
+                  formControlName="timeZone">
+                  <option value="UTC">UTC</option>
+                  <option value="America/New_York">Eastern Time (ET)</option>
+                  <option value="America/Chicago">Central Time (CT)</option>
+                  <option value="America/Denver">Mountain Time (MT)</option>
+                  <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="dateFormat" class="form-label">Date Format</label>
+                <select 
+                  class="form-select" 
+                  id="dateFormat" 
+                  formControlName="dateFormat">
+                  <option value="MM/dd/yyyy">MM/DD/YYYY</option>
+                  <option value="dd/MM/yyyy">DD/MM/YYYY</option>
+                  <option value="yyyy-MM-dd">YYYY-MM-DD</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="timeFormat" class="form-label">Time Format</label>
+                <select 
+                  class="form-select" 
+                  id="timeFormat" 
+                  formControlName="timeFormat">
+                  <option value="12h">12-hour (AM/PM)</option>
+                  <option value="24h">24-hour</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="defaultLanguage" class="form-label">Default Language</label>
+                <select 
+                  class="form-select" 
+                  id="defaultLanguage" 
+                  formControlName="defaultLanguage">
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="weekStartsOn" class="form-label">Week Starts On</label>
+                <select 
+                  class="form-select" 
+                  id="weekStartsOn" 
+                  formControlName="weekStartsOn">
+                  <option value="0">Sunday</option>
+                  <option value="1">Monday</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-end mt-4">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                [disabled]="generalSettingsForm.invalid || loading" 
+                (click)="saveGeneralSettings()">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Save General Settings
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Notifications Settings Tab -->
+        <div *ngSwitchCase="'notifications'">
+          <form [formGroup]="notificationSettingsForm">
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="enableEmailNotifications" 
+                  formControlName="enableEmailNotifications">
+                <label class="form-check-label" for="enableEmailNotifications">Enable Email Notifications</label>
+              </div>
+            </div>
+            
+            <div class="ms-4" *ngIf="notificationSettingsForm.get('enableEmailNotifications')?.value">
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="emailShiftAssignments" 
+                    formControlName="emailShiftAssignments">
+                  <label class="form-check-label" for="emailShiftAssignments">Send notification for shift assignments</label>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="emailShiftReminders" 
+                    formControlName="emailShiftReminders">
+                  <label class="form-check-label" for="emailShiftReminders">Send shift reminders</label>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="emailVacationApprovals" 
+                    formControlName="emailVacationApprovals">
+                  <label class="form-check-label" for="emailVacationApprovals">Send notification for vacation request approvals/rejections</label>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="emailVacationReminders" 
+                    formControlName="emailVacationReminders">
+                  <label class="form-check-label" for="emailVacationReminders">Send vacation reminders</label>
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="reminderHours" class="form-label">Send reminders this many hours in advance:</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    id="reminderHours" 
+                    formControlName="reminderHours">
+                  <div *ngIf="notificationSettingsForm.get('reminderHours')?.invalid && notificationSettingsForm.get('reminderHours')?.touched" class="text-danger mt-1 small">
+                    Hours must be between 1 and 72
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="senderEmail" class="form-label">Sender Email Address</label>
+                <input 
+                  type="email" 
+                  class="form-control" 
+                  id="senderEmail" 
+                  formControlName="senderEmail">
+                <div *ngIf="notificationSettingsForm.get('senderEmail')?.invalid && notificationSettingsForm.get('senderEmail')?.touched" class="text-danger mt-1 small">
+                  Please enter a valid email address
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="emailFooter" class="form-label">Email Footer Text</label>
+                <textarea 
+                  class="form-control" 
+                  id="emailFooter" 
+                  rows="3" 
+                  formControlName="emailFooter"></textarea>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-end mt-4">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                [disabled]="notificationSettingsForm.invalid || loading" 
+                (click)="saveNotificationSettings()">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Save Notification Settings
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Scheduling Settings Tab -->
+        <div *ngSwitchCase="'scheduling'">
+          <form [formGroup]="scheduleSettingsForm">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="minHoursBetweenShifts" class="form-label">Minimum Hours Between Shifts</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="minHoursBetweenShifts" 
+                  formControlName="minHoursBetweenShifts">
+                <div *ngIf="scheduleSettingsForm.get('minHoursBetweenShifts')?.invalid && scheduleSettingsForm.get('minHoursBetweenShifts')?.touched" class="text-danger mt-1 small">
+                  Hours must be between 0 and 24
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="maxConsecutiveWorkDays" class="form-label">Maximum Consecutive Work Days</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="maxConsecutiveWorkDays" 
+                  formControlName="maxConsecutiveWorkDays">
+                <div *ngIf="scheduleSettingsForm.get('maxConsecutiveWorkDays')?.invalid && scheduleSettingsForm.get('maxConsecutiveWorkDays')?.touched" class="text-danger mt-1 small">
+                  Days must be between 1 and 14
+                </div>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="defaultShiftDuration" class="form-label">Default Shift Duration (hours)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="defaultShiftDuration" 
+                  formControlName="defaultShiftDuration">
+                <div *ngIf="scheduleSettingsForm.get('defaultShiftDuration')?.invalid && scheduleSettingsForm.get('defaultShiftDuration')?.touched" class="text-danger mt-1 small">
+                  Hours must be between 1 and 24
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="minBreakDuration" class="form-label">Minimum Break Duration (minutes)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="minBreakDuration" 
+                  formControlName="minBreakDuration">
+                <div *ngIf="scheduleSettingsForm.get('minBreakDuration')?.invalid && scheduleSettingsForm.get('minBreakDuration')?.touched" class="text-danger mt-1 small">
+                  Minutes must be between 0 and 120
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="enableAutomaticScheduling" 
+                  formControlName="enableAutomaticScheduling">
+                <label class="form-check-label" for="enableAutomaticScheduling">Enable Automatic Scheduling</label>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="considerEmployeePreferences" 
+                  formControlName="considerEmployeePreferences">
+                <label class="form-check-label" for="considerEmployeePreferences">Consider Employee Preferences When Scheduling</label>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="enforceBreakRules" 
+                  formControlName="enforceBreakRules">
+                <label class="form-check-label" for="enforceBreakRules">Enforce Break Rules</label>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="requireVacationApproval" 
+                  formControlName="requireVacationApproval">
+                <label class="form-check-label" for="requireVacationApproval">Require Manager Approval for Vacation Requests</label>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-end mt-4">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                [disabled]="scheduleSettingsForm.invalid || loading" 
+                (click)="saveScheduleSettings()">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Save Scheduling Settings
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

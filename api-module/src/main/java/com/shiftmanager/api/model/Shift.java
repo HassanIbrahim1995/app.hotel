@@ -1,67 +1,83 @@
 package com.shiftmanager.api.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-/**
- * Shift entity for storing shift details
- */
 @Entity
-@Table(name = "shift")
-@Getter
-@Setter
+@Table(name = "shifts")
+@EntityListeners(AuditingEntityListener.class)
+@Data
 @NoArgsConstructor
-public class Shift extends BaseEntity {
-
-    @NotNull(message = "Shift date is required")
+public class Shift {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     @Column(name = "shift_date", nullable = false)
     private LocalDate shiftDate;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "shift_type_id", nullable = false)
-    private ShiftType shiftType;
-
+    
+    @Column(name = "start_time", nullable = false)
+    private LocalTime startTime;
+    
+    @Column(name = "end_time", nullable = false)
+    private LocalTime endTime;
+    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
-
-    @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EmployeeShift> employeeShifts = new HashSet<>();
-
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shift_type_id", nullable = false)
+    private ShiftType shiftType;
+    
+    private String note;
+    
+    @CreatedBy
+    @Column(name = "created_by_id")
+    private Long createdById;
+    
+    @CreatedDate
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+    
+    @Column(name = "updated_by_id")
+    private Long updatedById;
+    
     /**
-     * Constructor with all fields
-     * @param shiftDate Date of the shift
-     * @param shiftType Type of shift
-     * @param location Location of the shift
+     * Get notes (compatibility method for CalendarEntry)
+     * @return The note for this shift
      */
-    public Shift(LocalDate shiftDate, ShiftType shiftType, Location location) {
-        this.shiftDate = shiftDate;
-        this.shiftType = shiftType;
-        this.location = location;
+    public String getNotes() {
+        return this.note;
     }
-
+    
     /**
-     * Add an employee shift assignment
-     * @param employeeShift The employee shift to add
+     * Set notes (compatibility method for CalendarEntry)
+     * @param notes The notes to set
      */
-    public void addEmployeeShift(EmployeeShift employeeShift) {
-        employeeShifts.add(employeeShift);
-        employeeShift.setShift(this);
-    }
-
-    /**
-     * Remove an employee shift assignment
-     * @param employeeShift The employee shift to remove
-     */
-    public void removeEmployeeShift(EmployeeShift employeeShift) {
-        employeeShifts.remove(employeeShift);
-        employeeShift.setShift(null);
+    public void setNotes(String notes) {
+        this.note = notes;
     }
 }

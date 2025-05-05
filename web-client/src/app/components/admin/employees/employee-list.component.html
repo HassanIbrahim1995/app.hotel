@@ -1,0 +1,118 @@
+<div class="container-fluid pt-3">
+  <div class="row mb-3">
+    <div class="col">
+      <h2>Employees Management</h2>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-primary" (click)="openAddEmployeeModal(addEmployeeModal)">
+        <i class="bi bi-plus-circle me-1"></i> Add Employee
+      </button>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header bg-light">
+      <div class="row g-2">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input 
+              type="text" 
+              class="form-control" 
+              placeholder="Search employees..." 
+              [(ngModel)]="searchTerm"
+              (keyup.enter)="applyFilter()">
+            <button 
+              class="btn btn-outline-secondary" 
+              type="button" 
+              (click)="applyFilter()">
+              <i class="bi bi-search"></i>
+            </button>
+            <button 
+              class="btn btn-outline-secondary" 
+              type="button" 
+              *ngIf="searchTerm" 
+              (click)="clearSearch()">
+              <i class="bi bi-x-circle"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Position</th>
+              <th>Department</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="loading">
+              <td colspan="8" class="text-center">
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && employees.length === 0">
+              <td colspan="8" class="text-center">No employees found.</td>
+            </tr>
+            <tr *ngFor="let employee of employees">
+              <td>{{ employee.employeeNumber }}</td>
+              <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+              <td>{{ employee.position }}</td>
+              <td>{{ employee.department }}</td>
+              <td>{{ employee.email }}</td>
+              <td>{{ employee.phoneNumber }}</td>
+              <td>
+                <span class="badge rounded-pill" 
+                  [ngClass]="{'bg-success': employee.fullTime, 'bg-warning': !employee.fullTime}">
+                  {{ employee.fullTime ? 'Full-time' : 'Part-time' }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <button 
+                    class="btn btn-sm btn-outline-secondary" 
+                    (click)="editEmployee(employee.id!)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-outline-danger" 
+                    (click)="deleteEmployee(employee.id!)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Employee Modal -->
+<ng-template #addEmployeeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add New Employee</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <!-- Employee Form would go here -->
+    <p class="text-center">Employee form component would be loaded here</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cancel</button>
+    <button type="button" class="btn btn-primary">Save Employee</button>
+  </div>
+</ng-template>

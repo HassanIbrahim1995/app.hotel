@@ -1,0 +1,161 @@
+<div class="container-fluid pt-3">
+  <div class="row mb-3">
+    <div class="col">
+      <h2>Reports</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-4 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Report Parameters</h5>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="mb-3">
+              <label for="reportType" class="form-label">Report Type</label>
+              <select 
+                class="form-select" 
+                id="reportType" 
+                [(ngModel)]="reportType" 
+                name="reportType">
+                <option value="SCHEDULE">Schedule Report</option>
+                <option value="HOURS">Hours Report</option>
+                <option value="ATTENDANCE">Attendance Report</option>
+                <option value="VACATION">Vacation Report</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="employee" class="form-label">Employee</label>
+              <select 
+                class="form-select" 
+                id="employee" 
+                [(ngModel)]="selectedEmployeeId" 
+                name="employee">
+                <option [ngValue]="undefined">All Employees</option>
+                <option *ngFor="let employee of teamMembers" [ngValue]="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="location" class="form-label">Location</label>
+              <select 
+                class="form-select" 
+                id="location" 
+                [(ngModel)]="selectedLocationId" 
+                name="location">
+                <option [ngValue]="undefined">All Locations</option>
+                <option *ngFor="let location of locations" [ngValue]="location.id">{{ location.name }}</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Date Range</label>
+              <div class="input-group mb-1">
+                <input 
+                  class="form-control" 
+                  placeholder="yyyy-mm-dd"
+                  name="dpFromDate"
+                  [value]="dateFormatter.format(fromDate)"
+                  (input)="fromDate = validateInput(fromDate, $any($event).target.value)">
+                <span class="input-group-text">to</span>
+                <input 
+                  class="form-control" 
+                  placeholder="yyyy-mm-dd"
+                  name="dpToDate"
+                  [value]="toDate ? dateFormatter.format(toDate) : ''"
+                  (input)="toDate = validateInput(toDate, $any($event).target.value)">
+              </div>
+              <small class="text-muted">Select a date range for the report</small>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                [disabled]="!fromDate || !toDate || generatingReport" 
+                (click)="generateReport()">
+                <span *ngIf="generatingReport" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Generate Report
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary" 
+                (click)="resetForm()">
+                Reset
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-8">
+      <div class="card h-100">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Report Description</h5>
+        </div>
+        <div class="card-body">
+          <div [ngSwitch]="reportType">
+            <div *ngSwitchCase="'SCHEDULE'">
+              <h4>Schedule Report</h4>
+              <p>The Schedule Report provides a comprehensive view of your team's work schedule for the selected period. It includes:</p>
+              <ul>
+                <li>Daily shift assignments for each employee</li>
+                <li>Shift start and end times</li>
+                <li>Location information</li>
+                <li>Shift types and categories</li>
+              </ul>
+              <p>This report is useful for planning and ensuring appropriate coverage across all locations and shifts.</p>
+            </div>
+            
+            <div *ngSwitchCase="'HOURS'">
+              <h4>Hours Report</h4>
+              <p>The Hours Report summarizes the total hours worked by your team members during the selected period. It includes:</p>
+              <ul>
+                <li>Total hours worked per employee</li>
+                <li>Breakdown by regular hours and overtime</li>
+                <li>Comparison to contracted hours</li>
+                <li>Hours distribution by day/week</li>
+              </ul>
+              <p>This report is useful for payroll processing and ensuring compliance with working hour regulations.</p>
+            </div>
+            
+            <div *ngSwitchCase="'ATTENDANCE'">
+              <h4>Attendance Report</h4>
+              <p>The Attendance Report provides detailed information about your team's attendance patterns. It includes:</p>
+              <ul>
+                <li>Clock-in and clock-out times</li>
+                <li>Late arrivals and early departures</li>
+                <li>Missed shifts</li>
+                <li>Attendance rate calculation</li>
+              </ul>
+              <p>This report helps identify attendance patterns and potential issues requiring attention.</p>
+            </div>
+            
+            <div *ngSwitchCase="'VACATION'">
+              <h4>Vacation Report</h4>
+              <p>The Vacation Report provides a summary of vacation time for your team. It includes:</p>
+              <ul>
+                <li>Approved vacation periods</li>
+                <li>Pending vacation requests</li>
+                <li>Total vacation days used per employee</li>
+                <li>Remaining vacation allowance</li>
+              </ul>
+              <p>This report helps with planning and ensuring appropriate coverage during vacation periods.</p>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            Reports are generated as PDF files and will be downloaded automatically. You can print or share these reports as needed.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

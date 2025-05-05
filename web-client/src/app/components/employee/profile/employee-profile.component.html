@@ -1,0 +1,204 @@
+<div class="container pt-3">
+  <div class="row mb-3">
+    <div class="col">
+      <h2>My Profile</h2>
+    </div>
+    <div class="col-auto">
+      <button 
+        class="btn" 
+        [ngClass]="{'btn-outline-secondary': !isEditing, 'btn-outline-danger': isEditing}" 
+        (click)="toggleEdit()">
+        <i class="bi" [ngClass]="{'bi-pencil-square': !isEditing, 'bi-x-circle': isEditing}"></i>
+        {{ isEditing ? 'Cancel' : 'Edit Profile' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-4 mb-4">
+      <div class="card h-100">
+        <div class="card-body text-center pt-4">
+          <div class="mb-3">
+            <div class="avatar-placeholder bg-primary text-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; font-size: 2.5rem;">
+              {{ employee?.firstName?.charAt(0) }}{{ employee?.lastName?.charAt(0) }}
+            </div>
+          </div>
+          <h4 class="card-title">{{ employee?.firstName }} {{ employee?.lastName }}</h4>
+          <p class="card-text text-muted">{{ employee?.position }}</p>
+          <p class="card-text text-muted">{{ employee?.department }}</p>
+          
+          <div class="d-flex justify-content-center mt-4">
+            <div class="badge rounded-pill px-3 py-2" 
+              [ngClass]="{'bg-success': employee?.fullTime, 'bg-warning': !employee?.fullTime}">
+              {{ employee?.fullTime ? 'Full-time' : 'Part-time' }}
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-light">
+          <div class="row text-center">
+            <div class="col">
+              <small class="text-muted">Employee ID</small>
+              <p class="mb-0">{{ employee?.employeeNumber }}</p>
+            </div>
+            <div class="col">
+              <small class="text-muted">Joined</small>
+              <p class="mb-0">{{ employee?.hireDate | date:'MMM yyyy' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Personal Information</h5>
+          <div *ngIf="isEditing" class="d-flex">
+            <button 
+              class="btn btn-primary" 
+              [disabled]="loading || profileForm.pristine || profileForm.invalid" 
+              (click)="saveProfile()">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              Save Changes
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="profileForm">
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <label for="firstName" class="form-label">First Name</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="firstName" 
+                  formControlName="firstName" 
+                  [readonly]="!isEditing">
+                <div *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched" class="text-danger mt-1 small">
+                  First name is required
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="lastName" 
+                  formControlName="lastName" 
+                  [readonly]="!isEditing">
+                <div *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched" class="text-danger mt-1 small">
+                  Last name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <label for="email" class="form-label">Email</label>
+                <input 
+                  type="email" 
+                  class="form-control" 
+                  id="email" 
+                  formControlName="email" 
+                  [readonly]="!isEditing">
+                <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-danger mt-1 small">
+                  Valid email is required
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input 
+                  type="tel" 
+                  class="form-control" 
+                  id="phoneNumber" 
+                  formControlName="phoneNumber" 
+                  [readonly]="!isEditing">
+              </div>
+            </div>
+
+            <div formGroupName="address">
+              <h6 class="mb-3 mt-4">Address</h6>
+              <div class="mb-3">
+                <label for="street" class="form-label">Street Address</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="street" 
+                  formControlName="street" 
+                  [readonly]="!isEditing">
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4 mb-3 mb-md-0">
+                  <label for="city" class="form-label">City</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="city" 
+                    formControlName="city" 
+                    [readonly]="!isEditing">
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                  <label for="state" class="form-label">State/Province</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="state" 
+                    formControlName="state" 
+                    [readonly]="!isEditing">
+                </div>
+                <div class="col-md-4">
+                  <label for="zipCode" class="form-label">Postal/Zip Code</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="zipCode" 
+                    formControlName="zipCode" 
+                    [readonly]="!isEditing">
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="country" class="form-label">Country</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="country" 
+                  formControlName="country" 
+                  [readonly]="!isEditing">
+              </div>
+            </div>
+            
+            <div class="mt-4" *ngIf="!isEditing">
+              <h6 class="mb-3">Employment Details</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted">Position</label>
+                  <p>{{ employee?.position }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted">Department</label>
+                  <p>{{ employee?.department }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted">Manager</label>
+                  <p>{{ employee?.managerName || 'Not assigned' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted">Hire Date</label>
+                  <p>{{ employee?.hireDate | date:'longDate' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted">Employment Type</label>
+                  <p>{{ employee?.fullTime ? 'Full-time' : 'Part-time' }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted">Max Hours Per Week</label>
+                  <p>{{ employee?.maxHoursPerWeek }}</p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

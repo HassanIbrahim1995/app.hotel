@@ -1,0 +1,33 @@
+--
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ShiftServiceImpl.java:[25,8] com.shiftmanager.api.service.impl.ShiftServiceImpl is not abstract and does not override abstract method updateClockOutTime(java.lang.Long,java.time.LocalTime) in com.shiftmanager.api.service.ShiftService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[59,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[68,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[79,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[111,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[148,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[168,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[217,52] incompatible types: java.lang.Long cannot be converted to com.shiftmanager.api.model.Employee
+[INFO] 8 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.759 s
+[INFO] Finished at: 2025-05-05T23:05:59Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project api-module: Compilation failure: Compilation failure: 
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ShiftServiceImpl.java:[25,8] com.shiftmanager.api.service.impl.ShiftServiceImpl is not abstract and does not override abstract method updateClockOutTime(java.lang.Long,java.time.LocalTime) in com.shiftmanager.api.service.ShiftService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[59,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[68,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[79,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[111,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[148,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[168,13] incompatible types: com.shiftmanager.api.exception.ValidationErrorResponse cannot be converted to java.lang.Throwable
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[217,52] incompatible types: java.lang.Long cannot be converted to com.shiftmanager.api.model.Employee
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -1,0 +1,175 @@
+<div class="container-fluid pt-3">
+  <div class="row mb-3">
+    <div class="col">
+      <h2>Shift Types Management</h2>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-primary" (click)="openShiftTypeModal(shiftTypeModal)">
+        <i class="bi bi-plus-circle me-1"></i> Add Shift Type
+      </button>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Default Hours</th>
+              <th>Color</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="loading">
+              <td colspan="6" class="text-center">
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && shiftTypes.length === 0">
+              <td colspan="6" class="text-center">No shift types found.</td>
+            </tr>
+            <tr *ngFor="let shiftType of shiftTypes">
+              <td>{{ shiftType.name }}</td>
+              <td>{{ shiftType.description }}</td>
+              <td>{{ shiftType.defaultStartTime }} - {{ shiftType.defaultEndTime }}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div 
+                    class="color-swatch me-2" 
+                    [style.background-color]="shiftType.color"
+                    style="width: 20px; height: 20px; border-radius: 4px;"></div>
+                  <span>{{ getColorName(shiftType.color) }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="badge rounded-pill" 
+                  [ngClass]="{'bg-success': shiftType.active, 'bg-secondary': !shiftType.active}">
+                  {{ shiftType.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <button 
+                    class="btn btn-sm btn-outline-secondary" 
+                    (click)="openShiftTypeModal(shiftTypeModal, shiftType)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-outline-primary" 
+                    (click)="toggleShiftTypeStatus(shiftType)">
+                    <i class="bi" [ngClass]="{'bi-toggle-on': shiftType.active, 'bi-toggle-off': !shiftType.active}"></i>
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-outline-danger" 
+                    (click)="deleteShiftType(shiftType.id!)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Shift Type Modal -->
+<ng-template #shiftTypeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ isEditing ? 'Edit' : 'Add New' }} Shift Type</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="shiftTypeName" class="form-label">Name *</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="shiftTypeName" 
+          [(ngModel)]="isEditing ? selectedShiftType!.name : newShiftType.name" 
+          name="shiftTypeName"
+          required>
+      </div>
+      <div class="mb-3">
+        <label for="shiftTypeDescription" class="form-label">Description</label>
+        <textarea 
+          class="form-control" 
+          id="shiftTypeDescription" 
+          rows="2" 
+          [(ngModel)]="isEditing ? selectedShiftType!.description : newShiftType.description" 
+          name="shiftTypeDescription"></textarea>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="defaultStartTime" class="form-label">Default Start Time *</label>
+          <input 
+            type="time" 
+            class="form-control" 
+            id="defaultStartTime" 
+            [(ngModel)]="isEditing ? selectedShiftType!.defaultStartTime : newShiftType.defaultStartTime" 
+            name="defaultStartTime"
+            required>
+        </div>
+        <div class="col-md-6">
+          <label for="defaultEndTime" class="form-label">Default End Time *</label>
+          <input 
+            type="time" 
+            class="form-control" 
+            id="defaultEndTime" 
+            [(ngModel)]="isEditing ? selectedShiftType!.defaultEndTime : newShiftType.defaultEndTime" 
+            name="defaultEndTime"
+            required>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="shiftTypeColor" class="form-label">Color *</label>
+          <select 
+            class="form-select" 
+            id="shiftTypeColor" 
+            [(ngModel)]="isEditing ? selectedShiftType!.color : newShiftType.color" 
+            name="shiftTypeColor"
+            required>
+            <option *ngFor="let color of availableColors" [value]="color.value">{{ color.name }}</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="shiftTypeStatus" class="form-label">Status</label>
+          <select 
+            class="form-select" 
+            id="shiftTypeStatus" 
+            [(ngModel)]="isEditing ? selectedShiftType!.active : newShiftType.active" 
+            name="shiftTypeStatus">
+            <option [ngValue]="true">Active</option>
+            <option [ngValue]="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Preview</label>
+        <div 
+          class="p-3 rounded" 
+          [style.background-color]="isEditing ? selectedShiftType!.color : newShiftType.color"
+          [style.color]="((isEditing ? selectedShiftType!.color : newShiftType.color) === '#ffeb3b') ? '#000' : '#fff'">
+          <h5 class="mb-1">{{ isEditing ? selectedShiftType!.name : newShiftType.name || 'Shift Type Name' }}</h5>
+          <div>{{ isEditing ? selectedShiftType!.defaultStartTime : newShiftType.defaultStartTime }} - {{ isEditing ? selectedShiftType!.defaultEndTime : newShiftType.defaultEndTime }}</div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="saveShiftType()">{{ isEditing ? 'Update' : 'Save' }}</button>
+  </div>
+</ng-template>

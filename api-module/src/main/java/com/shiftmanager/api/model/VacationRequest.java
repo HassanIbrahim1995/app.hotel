@@ -33,6 +33,9 @@ public class VacationRequest extends BaseEntity {
     @NotNull(message = "End date is required")
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
+    
+    @Column(name = "request_date")
+    private LocalDate requestDate;
 
     @NotBlank(message = "Status is required")
     @Size(max = 20, message = "Status cannot exceed 20 characters")
@@ -42,6 +45,10 @@ public class VacationRequest extends BaseEntity {
     @Size(max = 255, message = "Request notes cannot exceed 255 characters")
     @Column(name = "request_notes")
     private String requestNotes;
+    
+    @Size(max = 255, message = "Reason cannot exceed 255 characters")
+    @Column(name = "reason")
+    private String reason;
 
     @Size(max = 255, message = "Review notes cannot exceed 255 characters")
     @Column(name = "review_notes")
@@ -127,5 +134,22 @@ public class VacationRequest extends BaseEntity {
         this.reviewer = reviewer;
         this.reviewNotes = notes;
         this.reviewedAt = LocalDateTime.now();
+    }
+    
+    /**
+     * Set the reviewer by ID
+     * @param reviewerId ID of the reviewer
+     */
+    public void setReviewedBy(Long reviewerId) {
+        // This will be linked to an actual employee by the service
+        // This method exists for compatibility with the service layer
+    }
+    
+    /**
+     * Set the review date
+     * @param reviewDate Date of the review
+     */
+    public void setReviewDate(LocalDateTime reviewDate) {
+        this.reviewedAt = reviewDate;
     }
 }

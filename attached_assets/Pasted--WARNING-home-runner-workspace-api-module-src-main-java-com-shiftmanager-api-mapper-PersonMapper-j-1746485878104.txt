@@ -1,0 +1,311 @@
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/PersonMapper.java:[17,14] Unmapped target properties: "address, employeeId, jobTitle, employeeNumber, position, department, hireDate, hourlyRate, fullTime, maxHoursPerWeek, note, status, location, subordinates".
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/PersonMapper.java:[20,14] Unmapped target properties: "address, employeeId, jobTitle, employeeNumber, position, department, hireDate, hourlyRate, fullTime, maxHoursPerWeek, note, status, location, subordinates".
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/CalendarMapper.java:[12,8] Unmapped target properties: "version, createdAt, updatedAt, employee, entries". Occured at 'E updateEntityFromDto(D dto, E entity)' in 'EntityMapper'.
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/CalendarMapper.java:[30,14] Unmapped target properties: "version, createdAt, updatedAt".
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/CalendarEntryMapper.java:[12,8] Unmapped target properties: "version, createdAt, updatedAt, calendar". Occured at 'E updateEntityFromDto(D dto, E entity)' in 'EntityMapper'.
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/CalendarEntryMapper.java:[28,19] Unmapped target properties: "version, createdAt, updatedAt".
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/VacationRequestMapper.java:[35,37] Unmapped target properties: "reviewedBy, reviewDate, reason".
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/VacationRequestMapper.java:[43,37] Unmapped target properties: "reviewedBy, reviewDate, reason".
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/ShiftTypeMapper.java:[14,15] Unmapped target properties: "startTime, endTime".
+[WARNING] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/ShiftTypeMapper.java:[16,10] Unmapped target properties: "startTime, endTime".
+[INFO] 12 warnings 
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/CalendarServiceImpl.java:[22,8] com.shiftmanager.api.service.impl.CalendarServiceImpl is not abstract and does not override abstract method getEmployeeCalendar(java.lang.Long,java.lang.Integer,java.lang.Integer) in com.shiftmanager.api.service.CalendarService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[59,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[68,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[72,72] cannot find symbol
+  symbol:   method findConflictingShifts(java.lang.Long,java.time.LocalDate,java.time.LocalTime,java.time.LocalTime)
+  location: variable employeeShiftRepository of type com.shiftmanager.api.repository.EmployeeShiftRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[79,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[86,22] cannot find symbol
+  symbol:   method setAssignedBy(com.shiftmanager.api.model.Employee)
+  location: variable employeeShift of type com.shiftmanager.api.model.EmployeeShift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[87,22] cannot find symbol
+  symbol:   method setAssignedAt(java.time.LocalDateTime)
+  location: variable employeeShift of type com.shiftmanager.api.model.EmployeeShift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[111,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[148,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[156,72] cannot find symbol
+  symbol:   method findConflictingShifts(java.lang.Long,java.time.LocalDate,java.time.LocalTime,java.time.LocalTime)
+  location: variable employeeShiftRepository of type com.shiftmanager.api.repository.EmployeeShiftRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[168,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[176,22] cannot find symbol
+  symbol:   method setAssignedBy(com.shiftmanager.api.model.Employee)
+  location: variable employeeShift of type com.shiftmanager.api.model.EmployeeShift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[177,22] cannot find symbol
+  symbol:   method setAssignedAt(java.time.LocalDateTime)
+  location: variable employeeShift of type com.shiftmanager.api.model.EmployeeShift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[207,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[212,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[217,52] incompatible types: java.lang.Long cannot be converted to com.shiftmanager.api.model.Employee
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[222,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[255,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[260,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[295,41] cannot find symbol
+  symbol:   method findByEmployeeInAndStatus(java.util.List<com.shiftmanager.api.model.Employee>,java.lang.String)
+  location: variable vacationRequestRepository of type com.shiftmanager.api.repository.VacationRequestRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[325,31] cannot find symbol
+  symbol:   method findByEmployeesInManagerTeamAndDateRange(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+  location: variable shiftRepository of type com.shiftmanager.api.repository.ShiftRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[359,22] cannot find symbol
+  symbol:   method setNotes(java.lang.String)
+  location: variable existingShift of type com.shiftmanager.api.model.Shift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[362,22] cannot find symbol
+  symbol:   method setUpdatedById(java.lang.Long)
+  location: variable existingShift of type com.shiftmanager.api.model.Shift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[394,32] cannot find symbol
+  symbol:   method deleteByShift(com.shiftmanager.api.model.Shift)
+  location: variable employeeShiftRepository of type com.shiftmanager.api.repository.EmployeeShiftRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[432,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[67,60] incompatible types: com.shiftmanager.api.dto.EmployeeDTO cannot be converted to com.shiftmanager.api.model.Employee
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[71,50] cannot find symbol
+  symbol:   method getEmployeeShifts(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+  location: variable shiftService of type com.shiftmanager.api.service.ShiftService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[77,65] cannot find symbol
+  symbol:   method getEmployeeVacationRequests(java.lang.Long)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[83,62] cannot find symbol
+  symbol:   method getEmployeeCalendarEntries(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+  location: variable calendarService of type com.shiftmanager.api.service.CalendarService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[89,50] cannot find symbol
+  symbol:   method getUnreadNotificationsCount(java.lang.Long)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[114,50] cannot find symbol
+  symbol:   method getEmployeeShifts(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+  location: variable shiftService of type com.shiftmanager.api.service.ShiftService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[144,64] incompatible types: java.util.List<com.shiftmanager.api.model.CalendarEntry> cannot be converted to com.shiftmanager.api.model.Calendar
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[172,62] cannot find symbol
+  symbol:   method getEmployeeCalendarEntries(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+  location: variable calendarService of type com.shiftmanager.api.service.CalendarService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[189,65] cannot find symbol
+  symbol:   method getEmployeeVacationRequestsByStatus(java.lang.Long,java.lang.String)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[207,65] cannot find symbol
+  symbol:   method createVacationRequest(java.lang.Long,com.shiftmanager.api.model.VacationRequest)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[228,47] cannot find symbol
+  symbol:   method hasVacationConflicts(java.lang.Long,java.time.LocalDate,java.time.LocalDate,java.lang.Long)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[245,59] cannot find symbol
+  symbol:   method getEmployeeNotifications(java.lang.Long,boolean)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[271,24] cannot find symbol
+  symbol:   method markNotificationAsRead(java.lang.Long,java.lang.Long)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[287,24] cannot find symbol
+  symbol:   method markAllNotificationsAsRead(java.lang.Long)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[314,57] cannot find symbol
+  symbol:   method getEmployeeStatistics(java.lang.Long,java.lang.Integer,java.lang.Integer)
+  location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[333,64] incompatible types: java.util.List<com.shiftmanager.api.model.CalendarEntry> cannot be converted to com.shiftmanager.api.model.Calendar
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/NotificationServiceImpl.java:[205,17] cannot find symbol
+  symbol:   method employeeId(java.lang.Long)
+  location: class com.shiftmanager.api.dto.NotificationDTO.Builder
+[INFO] 42 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.673 s
+[INFO] Finished at: 2025-05-05T22:57:21Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project api-module: Compilation failure: Compilation failure: 
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/CalendarServiceImpl.java:[22,8] com.shiftmanager.api.service.impl.CalendarServiceImpl is not abstract and does not override abstract method getEmployeeCalendar(java.lang.Long,java.lang.Integer,java.lang.Integer) in com.shiftmanager.api.service.CalendarService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[59,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[68,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[72,72] cannot find symbol
+[ERROR]   symbol:   method findConflictingShifts(java.lang.Long,java.time.LocalDate,java.time.LocalTime,java.time.LocalTime)
+[ERROR]   location: variable employeeShiftRepository of type com.shiftmanager.api.repository.EmployeeShiftRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[79,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[86,22] cannot find symbol
+[ERROR]   symbol:   method setAssignedBy(com.shiftmanager.api.model.Employee)
+[ERROR]   location: variable employeeShift of type com.shiftmanager.api.model.EmployeeShift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[87,22] cannot find symbol
+[ERROR]   symbol:   method setAssignedAt(java.time.LocalDateTime)
+[ERROR]   location: variable employeeShift of type com.shiftmanager.api.model.EmployeeShift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[111,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[148,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[156,72] cannot find symbol
+[ERROR]   symbol:   method findConflictingShifts(java.lang.Long,java.time.LocalDate,java.time.LocalTime,java.time.LocalTime)
+[ERROR]   location: variable employeeShiftRepository of type com.shiftmanager.api.repository.EmployeeShiftRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[168,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[176,22] cannot find symbol
+[ERROR]   symbol:   method setAssignedBy(com.shiftmanager.api.model.Employee)
+[ERROR]   location: variable employeeShift of type com.shiftmanager.api.model.EmployeeShift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[177,22] cannot find symbol
+[ERROR]   symbol:   method setAssignedAt(java.time.LocalDateTime)
+[ERROR]   location: variable employeeShift of type com.shiftmanager.api.model.EmployeeShift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[207,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[212,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[217,52] incompatible types: java.lang.Long cannot be converted to com.shiftmanager.api.model.Employee
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[222,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[255,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[260,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[295,41] cannot find symbol
+[ERROR]   symbol:   method findByEmployeeInAndStatus(java.util.List<com.shiftmanager.api.model.Employee>,java.lang.String)
+[ERROR]   location: variable vacationRequestRepository of type com.shiftmanager.api.repository.VacationRequestRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[325,31] cannot find symbol
+[ERROR]   symbol:   method findByEmployeesInManagerTeamAndDateRange(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+[ERROR]   location: variable shiftRepository of type com.shiftmanager.api.repository.ShiftRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[359,22] cannot find symbol
+[ERROR]   symbol:   method setNotes(java.lang.String)
+[ERROR]   location: variable existingShift of type com.shiftmanager.api.model.Shift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[362,22] cannot find symbol
+[ERROR]   symbol:   method setUpdatedById(java.lang.Long)
+[ERROR]   location: variable existingShift of type com.shiftmanager.api.model.Shift
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[394,32] cannot find symbol
+[ERROR]   symbol:   method deleteByShift(com.shiftmanager.api.model.Shift)
+[ERROR]   location: variable employeeShiftRepository of type com.shiftmanager.api.repository.EmployeeShiftRepository
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java:[432,19] no suitable constructor found for ValidationErrorResponse(java.lang.String)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse() is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.shiftmanager.api.exception.ValidationErrorResponse.ValidationErrorResponse(int,java.lang.String,java.lang.String,java.util.List<java.lang.String>) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[67,60] incompatible types: com.shiftmanager.api.dto.EmployeeDTO cannot be converted to com.shiftmanager.api.model.Employee
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[71,50] cannot find symbol
+[ERROR]   symbol:   method getEmployeeShifts(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+[ERROR]   location: variable shiftService of type com.shiftmanager.api.service.ShiftService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[77,65] cannot find symbol
+[ERROR]   symbol:   method getEmployeeVacationRequests(java.lang.Long)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[83,62] cannot find symbol
+[ERROR]   symbol:   method getEmployeeCalendarEntries(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+[ERROR]   location: variable calendarService of type com.shiftmanager.api.service.CalendarService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[89,50] cannot find symbol
+[ERROR]   symbol:   method getUnreadNotificationsCount(java.lang.Long)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[114,50] cannot find symbol
+[ERROR]   symbol:   method getEmployeeShifts(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+[ERROR]   location: variable shiftService of type com.shiftmanager.api.service.ShiftService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[144,64] incompatible types: java.util.List<com.shiftmanager.api.model.CalendarEntry> cannot be converted to com.shiftmanager.api.model.Calendar
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[172,62] cannot find symbol
+[ERROR]   symbol:   method getEmployeeCalendarEntries(java.lang.Long,java.time.LocalDate,java.time.LocalDate)
+[ERROR]   location: variable calendarService of type com.shiftmanager.api.service.CalendarService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[189,65] cannot find symbol
+[ERROR]   symbol:   method getEmployeeVacationRequestsByStatus(java.lang.Long,java.lang.String)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[207,65] cannot find symbol
+[ERROR]   symbol:   method createVacationRequest(java.lang.Long,com.shiftmanager.api.model.VacationRequest)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[228,47] cannot find symbol
+[ERROR]   symbol:   method hasVacationConflicts(java.lang.Long,java.time.LocalDate,java.time.LocalDate,java.lang.Long)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[245,59] cannot find symbol
+[ERROR]   symbol:   method getEmployeeNotifications(java.lang.Long,boolean)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[271,24] cannot find symbol
+[ERROR]   symbol:   method markNotificationAsRead(java.lang.Long,java.lang.Long)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[287,24] cannot find symbol
+[ERROR]   symbol:   method markAllNotificationsAsRead(java.lang.Long)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[314,57] cannot find symbol
+[ERROR]   symbol:   method getEmployeeStatistics(java.lang.Long,java.lang.Integer,java.lang.Integer)
+[ERROR]   location: variable employeeService of type com.shiftmanager.api.service.EmployeeService
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/EmployeeDashboardController.java:[333,64] incompatible types: java.util.List<com.shiftmanager.api.model.CalendarEntry> cannot be converted to com.shiftmanager.api.model.Calendar
+[ERROR] /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/NotificationServiceImpl.java:[205,17] cannot find symbol
+[ERROR]   symbol:   method employeeId(java.lang.Long)
+[ERROR]   location: class com.shiftmanager.api.dto.NotificationDTO.Builder
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

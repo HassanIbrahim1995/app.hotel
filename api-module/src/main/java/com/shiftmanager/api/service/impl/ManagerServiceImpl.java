@@ -56,7 +56,7 @@ public class ManagerServiceImpl implements ManagerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + employeeId));
         
         if (!employee.getManager().getId().equals(managerId)) {
-            throw new ValidationErrorResponse("Not authorized to manage this employee");
+            throw ValidationErrorResponse.exception("Not authorized to manage this employee");
         }
         
         // Verify shift exists
@@ -65,7 +65,7 @@ public class ManagerServiceImpl implements ManagerService {
         
         // Check if employee already assigned to this shift
         if (employeeShiftRepository.findByEmployeeAndShift(employee, shift).isPresent()) {
-            throw new ValidationErrorResponse("Employee already assigned to this shift");
+            throw ValidationErrorResponse.exception("Employee already assigned to this shift");
         }
         
         // Check if employee already has a shift at the same time
@@ -76,7 +76,7 @@ public class ManagerServiceImpl implements ManagerService {
                 shift.getEndTime());
         
         if (!conflictingShifts.isEmpty()) {
-            throw new ValidationErrorResponse("Employee already has a shift during this time");
+            throw ValidationErrorResponse.exception("Employee already has a shift during this time");
         }
         
         // Create employee shift assignment
@@ -108,7 +108,7 @@ public class ManagerServiceImpl implements ManagerService {
         
         // Verify employee reports to this manager
         if (!employee.getManager().getId().equals(managerId)) {
-            throw new ValidationErrorResponse("Not authorized to manage this employee");
+            throw ValidationErrorResponse.exception("Not authorized to manage this employee");
         }
         
         // Verify shift exists
@@ -145,7 +145,7 @@ public class ManagerServiceImpl implements ManagerService {
         
         // Verify employee reports to this manager
         if (!employeeShift.getEmployee().getManager().getId().equals(managerId)) {
-            throw new ValidationErrorResponse("Not authorized to adjust shifts for this employee");
+            throw ValidationErrorResponse.exception("Not authorized to adjust shifts for this employee");
         }
         
         // Verify new shift exists
@@ -165,7 +165,7 @@ public class ManagerServiceImpl implements ManagerService {
                 .collect(Collectors.toList());
         
         if (!conflictingShifts.isEmpty()) {
-            throw new ValidationErrorResponse("Employee already has a shift during this time");
+            throw ValidationErrorResponse.exception("Employee already has a shift during this time");
         }
         
         // Store old shift details for notification
@@ -204,12 +204,12 @@ public class ManagerServiceImpl implements ManagerService {
         
         // Verify employee reports to this manager
         if (!vacationRequest.getEmployee().getManager().getId().equals(managerId)) {
-            throw new ValidationErrorResponse("Not authorized to approve vacation requests for this employee");
+            throw ValidationErrorResponse.exception("Not authorized to approve vacation requests for this employee");
         }
         
         // Verify request is pending
         if (!"PENDING".equals(vacationRequest.getStatus())) {
-            throw new ValidationErrorResponse("Can only approve pending vacation requests");
+            throw ValidationErrorResponse.exception("Can only approve pending vacation requests");
         }
         
         // Check for overlapping approved requests
@@ -219,7 +219,7 @@ public class ManagerServiceImpl implements ManagerService {
                 vacationRequest.getEndDate());
         
         if (!overlappingRequests.isEmpty()) {
-            throw new ValidationErrorResponse("Employee already has approved vacation during this period");
+            throw ValidationErrorResponse.exception("Employee already has approved vacation during this period");
         }
         
         // Update vacation request
@@ -252,12 +252,12 @@ public class ManagerServiceImpl implements ManagerService {
         
         // Verify employee reports to this manager
         if (!vacationRequest.getEmployee().getManager().getId().equals(managerId)) {
-            throw new ValidationErrorResponse("Not authorized to reject vacation requests for this employee");
+            throw ValidationErrorResponse.exception("Not authorized to reject vacation requests for this employee");
         }
         
         // Verify request is pending
         if (!"PENDING".equals(vacationRequest.getStatus())) {
-            throw new ValidationErrorResponse("Can only reject pending vacation requests");
+            throw ValidationErrorResponse.exception("Can only reject pending vacation requests");
         }
         
         // Update vacation request
@@ -429,7 +429,7 @@ public class ManagerServiceImpl implements ManagerService {
         
         // Verify employee is a manager
         if (!(manager instanceof Manager)) {
-            throw new ValidationErrorResponse("Employee with ID: " + managerId + " is not a manager");
+            throw ValidationErrorResponse.exception("Employee with ID: " + managerId + " is not a manager");
         }
         
         return manager;

@@ -1,0 +1,64 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+          <h3>Login</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+            <div class="alert alert-danger" *ngIf="error">
+              {{ error }}
+            </div>
+            
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input 
+                type="text" 
+                formControlName="username" 
+                class="form-control" 
+                [ngClass]="{'is-invalid': submitted && f.username.errors}"
+                id="username" 
+                placeholder="Enter your username"
+              >
+              <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                <div *ngIf="f.username.errors.required">Username is required</div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                formControlName="password" 
+                class="form-control" 
+                [ngClass]="{'is-invalid': submitted && f.password.errors}"
+                id="password" 
+                placeholder="Enter your password"
+              >
+              <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+              </div>
+            </div>
+            
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe" formControlName="rememberMe">
+              <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button [disabled]="loading" type="submit" class="btn btn-primary btn-lg">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Login
+              </button>
+            </div>
+            
+            <div class="mt-3 text-center">
+              <a routerLink="/forgot-password" class="text-primary">Forgot password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

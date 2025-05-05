@@ -1,0 +1,341 @@
+<div class="container-fluid pt-3">
+  <div class="row mb-3">
+    <div class="col">
+      <h2>Schedule Management</h2>
+    </div>
+    <div class="col-auto">
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="openShiftModal(newShiftModal)">
+          <i class="bi bi-plus-circle me-1"></i> Create Shift
+        </button>
+        <button class="btn btn-outline-secondary" (click)="exportScheduleAsPdf()">
+          <i class="bi bi-file-pdf me-1"></i> Export PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header bg-light">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Date Range</label>
+          <div class="input-group">
+            <input 
+              class="form-control" 
+              placeholder="yyyy-mm-dd"
+              name="dpFromDate"
+              [value]="dateFormatter.format(fromDate)"
+              (input)="fromDate = validateInput(fromDate, $any($event).target.value)">
+            <span class="input-group-text">to</span>
+            <input 
+              class="form-control" 
+              placeholder="yyyy-mm-dd"
+              name="dpToDate"
+              [value]="toDate ? dateFormatter.format(toDate) : ''"
+              (input)="toDate = validateInput(toDate, $any($event).target.value)">
+            <button class="btn btn-outline-secondary" (click)="applyFilter()">
+              <i class="bi bi-calendar-check"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Location</label>
+          <select 
+            class="form-select" 
+            [(ngModel)]="selectedLocationId"
+            (change)="applyFilter()">
+            <option [ngValue]="undefined">All Locations</option>
+            <option *ngFor="let location of locations" [ngValue]="location.id">{{ location.name }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Shift Type</label>
+          <select 
+            class="form-select" 
+            [(ngModel)]="selectedShiftTypeId"
+            (change)="applyFilter()">
+            <option [ngValue]="undefined">All Shift Types</option>
+            <option *ngFor="let type of shiftTypes" [ngValue]="type.id">{{ type.name }}</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button 
+            class="btn btn-outline-secondary w-100" 
+            (click)="resetFilter()">
+            Reset Filters
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Location</th>
+              <th>Shift Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="loading">
+              <td colspan="6" class="text-center">
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && shifts.length === 0">
+              <td colspan="6" class="text-center">No shifts found for the selected criteria.</td>
+            </tr>
+            <tr *ngFor="let shift of shifts">
+              <td>{{ shift.shiftDate | date:'MMM d, yyyy' }}</td>
+              <td>{{ shift.startTime }} - {{ shift.endTime }}</td>
+              <td>{{ shift.location.name }}</td>
+              <td>
+                <span 
+                  class="badge rounded-pill" 
+                  [style.background-color]="shift.shiftType.color">
+                  {{ shift.shiftType.name }}
+                </span>
+              </td>
+              <td>
+                <!-- This would show if the shift is assigned or not -->
+                <span class="badge bg-secondary">Unassigned</span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <button 
+                    class="btn btn-sm btn-outline-primary" 
+                    (click)="openAssignModal(assignShiftModal, shift)">
+                    <i class="bi bi-person-plus"></i>
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-outline-secondary" 
+                    (click)="openShiftModal(editShiftModal, shift)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-outline-danger" 
+                    (click)="deleteShift(shift.id!)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Shift Modal -->
+<ng-template #newShiftModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Create New Shift</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="shiftDate" class="form-label">Date *</label>
+        <input 
+          type="date" 
+          class="form-control" 
+          id="shiftDate" 
+          [(ngModel)]="newShift.shiftDate" 
+          name="shiftDate"
+          required>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="startTime" class="form-label">Start Time *</label>
+          <input 
+            type="time" 
+            class="form-control" 
+            id="startTime" 
+            [(ngModel)]="newShift.startTime" 
+            name="startTime"
+            required>
+        </div>
+        <div class="col-md-6">
+          <label for="endTime" class="form-label">End Time *</label>
+          <input 
+            type="time" 
+            class="form-control" 
+            id="endTime" 
+            [(ngModel)]="newShift.endTime" 
+            name="endTime"
+            required>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="location" class="form-label">Location *</label>
+          <select 
+            class="form-select" 
+            id="location" 
+            [(ngModel)]="newShift.location" 
+            name="location"
+            required>
+            <option [ngValue]="undefined">Select Location</option>
+            <option *ngFor="let location of locations" [ngValue]="location">{{ location.name }}</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="shiftType" class="form-label">Shift Type *</label>
+          <select 
+            class="form-select" 
+            id="shiftType" 
+            [(ngModel)]="newShift.shiftType" 
+            name="shiftType"
+            required>
+            <option [ngValue]="undefined">Select Shift Type</option>
+            <option *ngFor="let type of shiftTypes" [ngValue]="type">{{ type.name }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="note" class="form-label">Notes</label>
+        <textarea 
+          class="form-control" 
+          id="note" 
+          rows="3" 
+          [(ngModel)]="newShift.note" 
+          name="note"></textarea>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="createShift()">Create Shift</button>
+  </div>
+</ng-template>
+
+<!-- Edit Shift Modal -->
+<ng-template #editShiftModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit Shift</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="selectedShift">
+      <div class="mb-3">
+        <label for="editShiftDate" class="form-label">Date *</label>
+        <input 
+          type="date" 
+          class="form-control" 
+          id="editShiftDate" 
+          [(ngModel)]="selectedShift.shiftDate" 
+          name="editShiftDate"
+          required>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="editStartTime" class="form-label">Start Time *</label>
+          <input 
+            type="time" 
+            class="form-control" 
+            id="editStartTime" 
+            [(ngModel)]="selectedShift.startTime" 
+            name="editStartTime"
+            required>
+        </div>
+        <div class="col-md-6">
+          <label for="editEndTime" class="form-label">End Time *</label>
+          <input 
+            type="time" 
+            class="form-control" 
+            id="editEndTime" 
+            [(ngModel)]="selectedShift.endTime" 
+            name="editEndTime"
+            required>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="editLocation" class="form-label">Location *</label>
+          <select 
+            class="form-select" 
+            id="editLocation" 
+            [(ngModel)]="selectedShift.location" 
+            name="editLocation"
+            required>
+            <option *ngFor="let location of locations" [ngValue]="location">{{ location.name }}</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="editShiftType" class="form-label">Shift Type *</label>
+          <select 
+            class="form-select" 
+            id="editShiftType" 
+            [(ngModel)]="selectedShift.shiftType" 
+            name="editShiftType"
+            required>
+            <option *ngFor="let type of shiftTypes" [ngValue]="type">{{ type.name }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="editNote" class="form-label">Notes</label>
+        <textarea 
+          class="form-control" 
+          id="editNote" 
+          rows="3" 
+          [(ngModel)]="selectedShift.note" 
+          name="editNote"></textarea>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cancel</button>
+    <button type="button" class="btn btn-primary">Update Shift</button>
+  </div>
+</ng-template>
+
+<!-- Assign Shift Modal -->
+<ng-template #assignShiftModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Assign Shift</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="selectedShift" class="mb-4">
+      <h5>Shift Details</h5>
+      <div class="card">
+        <div class="card-body">
+          <p><strong>Date:</strong> {{ selectedShift.shiftDate | date:'MMM d, yyyy' }}</p>
+          <p><strong>Time:</strong> {{ selectedShift.startTime }} - {{ selectedShift.endTime }}</p>
+          <p><strong>Location:</strong> {{ selectedShift.location.name }}</p>
+          <p><strong>Type:</strong> {{ selectedShift.shiftType.name }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <form>
+      <div class="mb-3">
+        <label for="assignEmployee" class="form-label">Select Employee *</label>
+        <select 
+          class="form-select" 
+          id="assignEmployee" 
+          [(ngModel)]="selectedEmployeeId" 
+          name="assignEmployee"
+          required>
+          <option [ngValue]="undefined">Select Employee</option>
+          <option *ngFor="let employee of availableEmployees" [ngValue]="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="assignShift()">Assign Shift</button>
+  </div>
+</ng-template>

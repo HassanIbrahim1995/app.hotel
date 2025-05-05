@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './core/services/auth.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -23,9 +23,9 @@ export class AppComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.isLoggedIn = !!user;
       if (user) {
-        this.userFullName = user.firstName + ' ' + user.lastName;
-        this.isAdmin = user.roles.includes('ROLE_ADMIN');
-        this.isManager = user.roles.includes('ROLE_MANAGER');
+        this.userFullName = user.fullName || '';
+        this.isAdmin = this.authService.isAdmin();
+        this.isManager = this.authService.isManager();
       }
     });
   }

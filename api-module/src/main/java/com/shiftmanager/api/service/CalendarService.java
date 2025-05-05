@@ -107,4 +107,62 @@ public interface CalendarService {
      * @return List of calendars
      */
     List<Calendar> getTeamCalendars(Long managerId);
+    
+    /**
+     * Get all calendars in the system
+     * @return List of all calendars
+     */
+    List<Calendar> getAllCalendars();
+    
+    /**
+     * Create a calendar entry for a specific calendar
+     * @param calendarId Calendar ID
+     * @param entry Calendar entry
+     * @return Created calendar entry
+     */
+    CalendarEntry createCalendarEntry(Long calendarId, CalendarEntry entry);
+    
+    /**
+     * Update a calendar entry
+     * @param calendarId Calendar ID
+     * @param entryId Entry ID
+     * @param entry Updated calendar entry
+     * @return Updated calendar entry
+     */
+    CalendarEntry updateCalendarEntry(Long calendarId, Long entryId, CalendarEntry entry);
+    
+    /**
+     * Delete a calendar entry from a calendar
+     * @param calendarId Calendar ID
+     * @param entryId Entry ID
+     * @return true if deleted
+     */
+    boolean deleteCalendarEntry(Long calendarId, Long entryId);
+    
+    /**
+     * Get calendar entries for a specific period
+     * @param calendarId Calendar ID
+     * @param startDate Start date
+     * @param endDate End date
+     * @return List of calendar entries
+     */
+    List<CalendarEntry> getCalendarEntries(Long calendarId, LocalDate startDate, LocalDate endDate);
+    
+    /**
+     * Export employee calendar to PDF
+     * @param employeeId Employee ID
+     * @param month Month (1-12)
+     * @param year Year
+     * @return PDF data as byte array
+     */
+    byte[] exportCalendarToPdf(Long employeeId, Integer month, Integer year);
+    
+    /**
+     * Get employee calendar for a specific month
+     * @param employeeId Employee ID
+     * @param month Month (1-12)
+     * @param year Year
+     * @return List of calendar entries
+     */
+    List<CalendarEntry> getEmployeeCalendar(Long employeeId, Integer month, Integer year);
 }

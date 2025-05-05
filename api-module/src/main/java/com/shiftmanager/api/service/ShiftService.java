@@ -1,97 +1,105 @@
 package com.shiftmanager.api.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
 import com.shiftmanager.api.dto.EmployeeShiftDTO;
 import com.shiftmanager.api.dto.ShiftDTO;
+import com.shiftmanager.api.model.Shift;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-/**
- * Service for managing shifts
- */
 public interface ShiftService {
     
-    /**
-     * Get all shifts
-     * @return List of shift DTOs
-     */
-    List<ShiftDTO> getAllShifts();
+    List<ShiftDTO> getAllShifts(LocalDate startDate, LocalDate endDate);
     
-    /**
-     * Get shift by ID
-     * @param id Shift ID
-     * @return Optional shift DTO
-     */
-    Optional<ShiftDTO> getShiftById(Long id);
+    ShiftDTO getShiftById(Long id);
     
-    /**
-     * Create a new shift
-     * @param shiftDTO Shift data
-     * @return Created shift DTO
-     */
     ShiftDTO createShift(ShiftDTO shiftDTO);
     
-    /**
-     * Update an existing shift
-     * @param id Shift ID
-     * @param shiftDTO Updated shift data
-     * @return Updated shift DTO
-     */
     ShiftDTO updateShift(Long id, ShiftDTO shiftDTO);
     
-    /**
-     * Delete a shift
-     * @param id Shift ID
-     */
     void deleteShift(Long id);
     
-    /**
-     * Get shifts for a date range
-     * @param startDate Start date
-     * @param endDate End date
-     * @return List of shifts in the date range
-     */
-    List<ShiftDTO> getShiftsByDateRange(LocalDate startDate, LocalDate endDate);
+    List<ShiftDTO> getShiftsByLocation(Long locationId, LocalDate startDate, LocalDate endDate);
+    
+    List<ShiftDTO> getShiftsByShiftType(Long shiftTypeId, LocalDate startDate, LocalDate endDate);
     
     /**
-     * Get shifts for a specific location
-     * @param locationId Location ID
+     * Get shifts for an employee
+     * @param employeeId Employee ID
      * @param startDate Start date
      * @param endDate End date
-     * @return List of shifts at the location in the date range
+     * @return List of shifts
      */
-    List<ShiftDTO> getShiftsByLocation(Long locationId, LocalDate startDate, LocalDate endDate);
+    List<Shift> getEmployeeShifts(Long employeeId, LocalDate startDate, LocalDate endDate);
+    
+    /**
+     * Get all assigned shifts for an employee
+     * @param employeeId Employee ID
+     * @param startDate Start date
+     * @param endDate End date
+     * @return List of employee shift assignments
+     */
+    List<EmployeeShiftDTO> getEmployeeShiftAssignments(Long employeeId, LocalDate startDate, LocalDate endDate);
+    
+    /**
+     * Get shifts for the current authenticated employee
+     * @param startDate Start date
+     * @param endDate End date
+     * @return List of employee shift assignments
+     */
+    List<EmployeeShiftDTO> getMyShifts(LocalDate startDate, LocalDate endDate);
     
     /**
      * Assign an employee to a shift
      * @param shiftId Shift ID
      * @param employeeId Employee ID
-     * @return The created employee shift assignment
+     * @return true if successful
      */
-    EmployeeShiftDTO assignEmployeeToShift(Long shiftId, Long employeeId);
+    boolean assignShift(Long shiftId, Long employeeId);
     
     /**
-     * Remove an employee from a shift
-     * @param shiftId Shift ID
-     * @param employeeId Employee ID
-     */
-    void removeEmployeeFromShift(Long shiftId, Long employeeId);
-    
-    /**
-     * Update an employee's shift status (e.g., ASSIGNED, CONFIRMED, COMPLETED)
+     * Employee confirms a shift assignment
      * @param employeeShiftId Employee shift assignment ID
-     * @param status New status
      * @return Updated employee shift assignment
      */
-    EmployeeShiftDTO updateShiftStatus(Long employeeShiftId, String status);
+    EmployeeShiftDTO confirmShift(Long employeeShiftId);
     
     /**
-     * Generate a schedule report for a location and date range
-     * @param locationId Location ID
-     * @param startDate Start date
-     * @param endDate End date
-     * @return PDF document as byte array
+     * Employee declines a shift assignment
+     * @param employeeShiftId Employee shift assignment ID
+     * @param reason Optional reason for declining
+     * @return Updated employee shift assignment
      */
-    byte[] generateScheduleReport(Long locationId, LocalDate startDate, LocalDate endDate);
+    EmployeeShiftDTO declineShift(Long employeeShiftId, String reason);
+    
+    /**
+     * Clock in for a shift
+     * @param employeeShiftId Employee shift assignment ID
+     * @return Updated employee shift assignment
+     */
+    EmployeeShiftDTO clockIn(Long employeeShiftId);
+    
+    /**
+     * Clock out from a shift
+     * @param employeeShiftId Employee shift assignment ID
+     * @return Updated employee shift assignment
+     */
+    EmployeeShiftDTO clockOut(Long employeeShiftId);
+    
+    /**
+     * Update clock in time for a shift (manager function)
+     * @param employeeShiftId Employee shift assignment ID
+     * @param clockInTime New clock in time
+     * @return Updated employee shift assignment
+     */
+    EmployeeShiftDTO updateClockInTime(Long employeeShiftId, LocalTime clockInTime);
+    
+    /**
+     * Update clock out time for a shift (manager function)
+     * @param employeeShiftId Employee shift assignment ID
+     * @param clockOutTime New clock out time
+     * @return Updated employee shift assignment
+     */
+    EmployeeShiftDTO updateClockOutTime(Long employeeShiftId, LocalTime clockOutTime);
 }

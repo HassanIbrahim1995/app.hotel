@@ -1,0 +1,139 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">My Calendar</h1>
+    <div class="btn-group">
+      <button class="btn btn-outline-primary" (click)="changeView('dayGridMonth')" [class.active]="currentView === 'dayGridMonth'">
+        <i class="bi bi-calendar-month me-1"></i> Month
+      </button>
+      <button class="btn btn-outline-primary" (click)="changeView('timeGridWeek')" [class.active]="currentView === 'timeGridWeek'">
+        <i class="bi bi-calendar-week me-1"></i> Week
+      </button>
+      <button class="btn btn-outline-primary" (click)="changeView('timeGridDay')" [class.active]="currentView === 'timeGridDay'">
+        <i class="bi bi-calendar-day me-1"></i> Day
+      </button>
+      <button class="btn btn-outline-primary" (click)="changeView('listWeek')" [class.active]="currentView === 'listWeek'">
+        <i class="bi bi-list-ul me-1"></i> List
+      </button>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-9">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <!-- FullCalendar component -->
+          <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <!-- Legend -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Legend</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-2" *ngFor="let type of legendItems">
+            <div class="legend-color me-2" [style.background-color]="type.color"></div>
+            <span>{{ type.name }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Upcoming Events -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Upcoming Events</h5>
+        </div>
+        <div class="card-body p-0">
+          <div *ngIf="upcomingEvents.length === 0" class="text-center text-muted py-4">
+            <i class="bi bi-calendar-x mb-2" style="font-size: 2rem;"></i>
+            <p>No upcoming events</p>
+          </div>
+          
+          <div class="list-group list-group-flush">
+            <a *ngFor="let event of upcomingEvents" href="javascript:void(0)" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">{{ event.title }}</h6>
+                <small>{{ event.start | date:'MMM d' }}</small>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="legend-color me-2" [style.background-color]="event.color"></div>
+                <small>{{ event.start | date:'h:mm a' }} - {{ event.end | date:'h:mm a' }}</small>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Event Details Modal -->
+<div class="modal" tabindex="-1" id="eventDetailsModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" [style.background-color]="selectedEvent?.color || '#ffffff'">
+        <h5 class="modal-title">{{ selectedEvent?.title }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedEvent">
+        <div class="mb-3">
+          <strong>Date:</strong> {{ selectedEvent.start | date:'EEEE, MMMM d, yyyy' }}
+        </div>
+        <div class="mb-3">
+          <strong>Time:</strong> {{ selectedEvent.start | date:'h:mm a' }} - {{ selectedEvent.end | date:'h:mm a' }}
+        </div>
+        <div class="mb-3" *ngIf="selectedEvent.location">
+          <strong>Location:</strong> {{ selectedEvent.location }}
+        </div>
+        <div class="mb-3" *ngIf="selectedEvent.description">
+          <strong>Description:</strong> {{ selectedEvent.description }}
+        </div>
+        
+        <!-- Custom fields based on event type -->
+        <div *ngIf="selectedEvent.extendedProps?.entryType === 'SHIFT'">
+          <div class="mb-3">
+            <strong>Shift Type:</strong> {{ selectedEvent.extendedProps?.shiftType }}
+          </div>
+          <div class="mb-3" *ngIf="selectedEvent.extendedProps?.status">
+            <strong>Status:</strong> 
+            <span class="badge" [ngClass]="getStatusBadgeClass(selectedEvent.extendedProps?.status)">{{ selectedEvent.extendedProps?.status }}</span>
+          </div>
+          <div class="mb-3" *ngIf="selectedEvent.extendedProps?.assignedBy">
+            <strong>Assigned By:</strong> {{ selectedEvent.extendedProps?.assignedBy }}
+          </div>
+        </div>
+        
+        <div *ngIf="selectedEvent.extendedProps?.entryType === 'VACATION'">
+          <div class="mb-3">
+            <strong>Request Date:</strong> {{ selectedEvent.extendedProps?.requestDate | date:'MMM d, yyyy' }}
+          </div>
+          <div class="mb-3">
+            <strong>Status:</strong>
+            <span class="badge" [ngClass]="getVacationStatusBadgeClass(selectedEvent.extendedProps?.status)">{{ selectedEvent.extendedProps?.status }}</span>
+          </div>
+          <div class="mb-3" *ngIf="selectedEvent.extendedProps?.reviewedBy">
+            <strong>Reviewed By:</strong> {{ selectedEvent.extendedProps?.reviewedBy }}
+          </div>
+          <div class="mb-3" *ngIf="selectedEvent.extendedProps?.reviewNotes">
+            <strong>Review Notes:</strong> {{ selectedEvent.extendedProps?.reviewNotes }}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        
+        <!-- Shift-specific actions -->
+        <button *ngIf="selectedEvent?.extendedProps?.entryType === 'SHIFT' && selectedEvent?.extendedProps?.status === 'ASSIGNED'" 
+                type="button" class="btn btn-success"
+                (click)="confirmShift(selectedEvent.extendedProps?.id)">Confirm</button>
+                
+        <button *ngIf="selectedEvent?.extendedProps?.entryType === 'SHIFT' && selectedEvent?.extendedProps?.status === 'ASSIGNED'" 
+                type="button" class="btn btn-danger"
+                (click)="declineShift(selectedEvent.extendedProps?.id)">Decline</button>
+      </div>
+    </div>
+  </div>
+</div>

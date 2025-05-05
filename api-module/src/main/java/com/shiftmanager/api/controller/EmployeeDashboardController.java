@@ -64,8 +64,7 @@ public class EmployeeDashboardController {
         LocalDate endDate = today.plusDays(30);
         
         // Get employee details
-        Employee employee = employeeService.getEmployeeById(employeeId);
-        EmployeeDTO employeeDTO = employeeMapper.toDto(employee);
+        EmployeeDTO employeeDTO = employeeService.getEmployeeById(employeeId);
         
         // Get upcoming shifts
         List<Shift> upcomingShifts = shiftService.getEmployeeShifts(employeeId, today, endDate);
@@ -79,8 +78,11 @@ public class EmployeeDashboardController {
                 .map(vacationRequestMapper::toDto)
                 .collect(Collectors.toList());
         
+        // Get calendar
+        Calendar calendar = calendarService.getOrCreateCalendarForEmployee(employeeId);
+        
         // Get calendar entries
-        List<CalendarEntry> calendarEntries = calendarService.getEmployeeCalendarEntries(employeeId, today, endDate);
+        List<CalendarEntry> calendarEntries = calendarService.getCalendarEntriesForDateRange(calendar.getId(), today, endDate);
         List<CalendarEntryDTO> calendarEntryDTOs = calendarEntries.stream()
                 .map(calendarEntryMapper::toDto)
                 .collect(Collectors.toList());
@@ -126,7 +128,7 @@ public class EmployeeDashboardController {
      * @return Calendar for specified month
      */
     @GetMapping("/calendar")
-    public ResponseEntity<CalendarDTO> getMonthlyCalendar(
+    public ResponseEntity<Map<String, Object>> getMonthlyCalendar(
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month) {
         
@@ -141,10 +143,26 @@ public class EmployeeDashboardController {
             month = now.getMonthValue();
         }
         
-        Calendar calendar = calendarService.getEmployeeCalendar(employeeId, year, month);
+        // Get the calendar entries
+        List<CalendarEntry> entries = calendarService.getEmployeeCalendar(employeeId, year, month);
+        
+        // Get the calendar for metadata
+        Calendar calendar = calendarService.getOrCreateCalendarForEmployee(employeeId);
         CalendarDTO calendarDTO = calendarMapper.toDto(calendar);
         
-        return ResponseEntity.ok(calendarDTO);
+        // Map entries to DTOs
+        List<CalendarEntryDTO> entryDTOs = entries.stream()
+                .map(calendarEntryMapper::toDto)
+                .collect(Collectors.toList());
+        
+        // Build response
+        Map<String, Object> response = new HashMap<>();
+        response.put("calendar", calendarDTO);
+        response.put("entries", entryDTOs);
+        response.put("year", year);
+        response.put("month", month);
+        
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -169,7 +187,13 @@ public class EmployeeDashboardController {
             endDate = now.plusDays(30);
         }
         
-        List<CalendarEntry> calendarEntries = calendarService.getEmployeeCalendarEntries(employeeId, startDate, endDate);
+        // Get the calendar for the employee
+        Calendar calendar = calendarService.getOrCreateCalendarForEmployee(employeeId);
+        
+        // Get the entries for the date range
+        List<CalendarEntry> calendarEntries = calendarService.getCalendarEntriesForDateRange(
+                calendar.getId(), startDate, endDate);
+                
         List<CalendarEntryDTO> calendarEntryDTOs = calendarEntries.stream()
                 .map(calendarEntryMapper::toDto)
                 .collect(Collectors.toList());
@@ -329,11 +353,8 @@ public class EmployeeDashboardController {
         
         Long employeeId = getCurrentEmployeeId();
         
-        // Get calendar ID for employee
-        Calendar calendar = calendarService.getEmployeeCalendar(employeeId, year, month);
-        
-        // Export to PDF
-        byte[] pdfBytes = calendarService.exportCalendarToPdf(calendar.getId(), year, month);
+        // Export to PDF directly using employee ID
+        byte[] pdfBytes = calendarService.exportCalendarToPdf(employeeId, year, month);
         
         return ResponseEntity.ok()
                 .header("Content-Type", "application/pdf")

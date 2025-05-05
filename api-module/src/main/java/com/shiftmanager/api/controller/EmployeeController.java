@@ -1,292 +1,91 @@
 package com.shiftmanager.api.controller;
 
-import com.shiftmanager.api.dto.*;
-import com.shiftmanager.api.mapper.*;
-import com.shiftmanager.api.model.*;
-import com.shiftmanager.api.service.CalendarService;
-import com.shiftmanager.api.service.EmployeeService;
-import com.shiftmanager.api.service.ShiftService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.shiftmanager.api.dto.EmployeeDTO;
+import com.shiftmanager.api.service.EmployeeService;
 
 import jakarta.validation.Valid;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-/**
- * Controller for employee operations
- */
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
-
+    
+    private final EmployeeService employeeService;
+    
     @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
-    private ShiftService shiftService;
-
-    @Autowired
-    private CalendarService calendarService;
-
-    @Autowired
-    private EmployeeMapper employeeMapper;
-
-    @Autowired
-    private ShiftMapper shiftMapper;
-
-    @Autowired
-    private VacationRequestMapper vacationRequestMapper;
-
-    @Autowired
-    private CalendarMapper calendarMapper;
-
-    @Autowired
-    private CalendarEntryMapper calendarEntryMapper;
-
-    /**
-     * Get all employees (admin only)
-     * @return List of employees
-     */
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+    
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
-        List<Employee> employees = employeeService.getAllEmployees();
-        List<EmployeeDTO> employeeDTOs = employees.stream()
-                .map(employeeMapper::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(employeeDTOs);
+        List<EmployeeDTO> employees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(employees);
     }
-
-    /**
-     * Get employee by ID
-     * @param id Employee ID
-     * @return Employee
-     */
+    
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isSelfOrManager(#id)")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or @securityService.isCurrentUser(#id)")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
-        Employee employee = employeeService.getEmployeeById(id);
-        EmployeeDTO employeeDTO = employeeMapper.toDto(employee);
-
-        return ResponseEntity.ok(employeeDTO);
+        EmployeeDTO employee = employeeService.getEmployeeById(id);
+        return ResponseEntity.ok(employee);
     }
-
-    /**
-     * Create a new employee (admin only)
-     * @param employeeDTO Employee data
-     * @return Created employee
-     */
-    @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
-        Employee employee = employeeMapper.toEntity(employeeDTO);
-        Employee createdEmployee = employeeService.createEmployee(employee);
-        EmployeeDTO createdEmployeeDTO = employeeMapper.toDto(createdEmployee);
-
-        return ResponseEntity.ok(createdEmployeeDTO);
-    }
-
-    /**
-     * Update employee
-     * @param id Employee ID
-     * @param employeeDTO Employee data
-     * @return Updated employee
-     */
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isManager(#id)")
-    public ResponseEntity<EmployeeDTO> updateEmployee(
-            @PathVariable Long id,
-            @Valid @RequestBody EmployeeDTO employeeDTO) {
-
-        Employee employee = employeeMapper.toEntity(employeeDTO);
-        Employee updatedEmployee = employeeService.updateEmployee(id, employee);
-        EmployeeDTO updatedEmployeeDTO = employeeMapper.toDto(updatedEmployee);
-
-        return ResponseEntity.ok(updatedEmployeeDTO);
-    }
-
-    /**
-     * Delete employee (admin only)
-     * @param id Employee ID
-     * @return Delete status
-     */
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id) {
-        employeeService.deleteEmployee(id);
-
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * Get employee shifts
-     * @param id Employee ID
-     * @param startDate Start date
-     * @param endDate End date
-     * @return List of shifts
-     */
-    @GetMapping("/{id}/shifts")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isSelfOrManager(#id)")
-    public ResponseEntity<List<ShiftDTO>> getEmployeeShifts(
-            @PathVariable Long id,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
-        List<Shift> shifts = shiftService.getEmployeeShifts(id, startDate, endDate);
-        List<ShiftDTO> shiftDTOs = shifts.stream()
-                .map(shiftMapper::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(shiftDTOs);
-    }
-
-    /**
-     * Get employee vacation requests
-     * @param id Employee ID
-     * @return List of vacation requests
-     */
-    @GetMapping("/{id}/vacation-requests")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isSelfOrManager(#id)")
-    public ResponseEntity<List<VacationRequestDTO>> getEmployeeVacationRequests(@PathVariable Long id) {
-        List<VacationRequest> vacationRequests = employeeService.getEmployeeVacationRequests(id);
-        List<VacationRequestDTO> vacationRequestDTOs = vacationRequests.stream()
-                .map(vacationRequestMapper::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(vacationRequestDTOs);
-    }
-
-    /**
-     * Create vacation request
-     * @param id Employee ID
-     * @param vacationRequestDTO Vacation request data
-     * @return Created vacation request
-     */
-    @PostMapping("/{id}/vacation-requests")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isSelf(#id)")
-    public ResponseEntity<VacationRequestDTO> createVacationRequest(
-            @PathVariable Long id,
-            @Valid @RequestBody VacationRequestDTO vacationRequestDTO) {
-
-        VacationRequest vacationRequest = vacationRequestMapper.toEntity(vacationRequestDTO);
-        VacationRequest createdVacationRequest = employeeService.createVacationRequest(id, vacationRequest);
-        VacationRequestDTO createdVacationRequestDTO = vacationRequestMapper.toDto(createdVacationRequest);
-
-        return ResponseEntity.ok(createdVacationRequestDTO);
-    }
-
-    /**
-     * Get employee calendar
-     * @param id Employee ID
-     * @param year Year
-     * @param month Month
-     * @return Employee calendar
-     */
-    @GetMapping("/{id}/calendar")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isSelfOrManager(#id)")
-    public ResponseEntity<CalendarDTO> getEmployeeCalendar(
-            @PathVariable Long id,
-            @RequestParam Integer year,
-            @RequestParam Integer month) {
-
-        Calendar calendar = calendarService.getEmployeeCalendar(id, year, month);
-        CalendarDTO calendarDTO = calendarMapper.toDto(calendar);
-
-        return ResponseEntity.ok(calendarDTO);
-    }
-
-    /**
-     * Get employee calendar entries
-     * @param id Employee ID
-     * @param startDate Start date
-     * @param endDate End date
-     * @return List of calendar entries
-     */
-    @GetMapping("/{id}/calendar/entries")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isSelfOrManager(#id)")
-    public ResponseEntity<List<CalendarEntryDTO>> getEmployeeCalendarEntries(
-            @PathVariable Long id,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
-        List<CalendarEntry> calendarEntries = calendarService.getEmployeeCalendarEntries(id, startDate, endDate);
-        List<CalendarEntryDTO> calendarEntryDTOs = calendarEntries.stream()
-                .map(calendarEntryMapper::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(calendarEntryDTOs);
-    }
-
-    /**
-     * Get employee notifications
-     * @param id Employee ID
-     * @return List of notifications
-     */
-    @GetMapping("/{id}/notifications")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isSelf(#id)")
-    public ResponseEntity<List<NotificationDTO>> getEmployeeNotifications(@PathVariable Long id) {
-        List<Notification> notifications = employeeService.getEmployeeNotifications(id);
-        List<NotificationDTO> notificationDTOs = notifications.stream()
-                .map(notification -> {
-                    NotificationDTO dto = new NotificationDTO();
-                    dto.setId(notification.getId());
-                    dto.setMessage(notification.getMessage());
-                    dto.setType(notification.getType());
-                    dto.setCreatedAt(notification.getCreatedAt());
-                    dto.setRead(notification.isRead());
-                    dto.setReferenceId(notification.getReferenceId());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(notificationDTOs);
-    }
-
-    /**
-     * Mark notification as read
-     * @param id Employee ID
-     * @param notificationId Notification ID
-     * @return Success status
-     */
-    @PutMapping("/{id}/notifications/{notificationId}/read")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @authorizationService.isSelf(#id)")
-    public ResponseEntity<Map<String, Boolean>> markNotificationAsRead(
-            @PathVariable Long id,
-            @PathVariable Long notificationId) {
-
-        employeeService.markNotificationAsRead(id, notificationId);
-
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", Boolean.TRUE);
-
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * Get current authenticated employee
-     * @return Current employee
-     */
+    
     @GetMapping("/me")
     public ResponseEntity<EmployeeDTO> getCurrentEmployee() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        Employee employee = employeeService.getEmployeeByUsername(username);
-        EmployeeDTO employeeDTO = employeeMapper.toDto(employee);
-
-        return ResponseEntity.ok(employeeDTO);
+        EmployeeDTO employee = employeeService.getCurrentEmployee();
+        return ResponseEntity.ok(employee);
+    }
+    
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
+        return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
+    }
+    
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isCurrentUser(#id)")
+    public ResponseEntity<EmployeeDTO> updateEmployee(
+            @PathVariable Long id, 
+            @Valid @RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
+        return ResponseEntity.ok(updatedEmployee);
+    }
+    
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/manager/{managerId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public ResponseEntity<List<EmployeeDTO>> getEmployeesByManager(@PathVariable Long managerId) {
+        List<EmployeeDTO> employees = employeeService.getEmployeesByManager(managerId);
+        return ResponseEntity.ok(employees);
+    }
+    
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public ResponseEntity<List<EmployeeDTO>> searchEmployees(@RequestParam String query) {
+        List<EmployeeDTO> employees = employeeService.searchEmployees(query);
+        return ResponseEntity.ok(employees);
     }
 }

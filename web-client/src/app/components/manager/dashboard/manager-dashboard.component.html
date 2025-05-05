@@ -1,0 +1,218 @@
+<div class="container-fluid py-4">
+  <h1 class="mb-4">Manager Dashboard</h1>
+  
+  <!-- Key Stats Row -->
+  <div class="row mb-4">
+    <div class="col-md-3 mb-4">
+      <div class="card text-white bg-primary h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="card-title mb-0">Team Members</h6>
+              <h2 class="my-2">{{ teamStats.employeeCount || 0 }}</h2>
+            </div>
+            <i class="bi bi-people fs-1 opacity-50"></i>
+          </div>
+          <p class="card-text">{{ teamStats.activeEmployeeCount || 0 }} active today</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+      <div class="card text-white bg-success h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="card-title mb-0">Shifts Today</h6>
+              <h2 class="my-2">{{ teamStats.todayShiftCount || 0 }}</h2>
+            </div>
+            <i class="bi bi-calendar-check fs-1 opacity-50"></i>
+          </div>
+          <p class="card-text">{{ teamStats.completedShiftCount || 0 }} completed</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+      <div class="card text-white bg-warning h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="card-title mb-0">Pending Approvals</h6>
+              <h2 class="my-2">{{ teamStats.pendingVacationRequestCount || 0 }}</h2>
+            </div>
+            <i class="bi bi-hourglass-split fs-1 opacity-50"></i>
+          </div>
+          <p class="card-text">{{ teamStats.todayVacationCount || 0 }} on vacation today</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+      <div class="card text-white bg-info h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="card-title mb-0">Weekly Hours</h6>
+              <h2 class="my-2">{{ teamStats.weeklyHours || 0 }}h</h2>
+            </div>
+            <i class="bi bi-clock-history fs-1 opacity-50"></i>
+          </div>
+          <p class="card-text">{{ teamStats.weeklyOvertime || 0 }}h overtime</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <!-- Staff Availability -->
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-calendar-week me-2"></i>Team Schedule</h5>
+            <div>
+              <button class="btn btn-sm btn-outline-secondary me-2" (click)="previousWeek()">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <span class="mx-2">{{ currentWeekStart | date:'MMM d' }} - {{ currentWeekEnd | date:'MMM d, yyyy' }}</span>
+              <button class="btn btn-sm btn-outline-secondary ms-2" (click)="nextWeek()">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-bordered m-0">
+              <thead>
+                <tr class="text-center bg-light">
+                  <th style="width: 15%">Employee</th>
+                  <th *ngFor="let day of weekDays" style="width: 12%">
+                    {{ day.date | date:'E' }}<br>
+                    <small>{{ day.date | date:'MMM d' }}</small>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let employee of teamMembers">
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="d-flex align-items-center justify-content-center bg-light rounded-circle me-2" 
+                           style="width: 32px; height: 32px;">
+                        <i class="bi bi-person"></i>
+                      </div>
+                      <div>
+                        {{ employee.firstName }} {{ employee.lastName }}
+                        <div class="small text-muted">{{ employee.position }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td *ngFor="let day of weekDays" class="align-middle p-0">
+                    <div *ngIf="getShiftForEmployeeAndDay(employee, day.date) as shift" 
+                         class="m-1 p-2 rounded" 
+                         [ngStyle]="{'background-color': shift.shift.shiftType.color + '25', 'border-left': '3px solid ' + shift.shift.shiftType.color}">
+                      <div class="small fw-bold">{{ shift.shift.shiftType.name }}</div>
+                      <div class="small">{{ shift.shift.startTime | date:'h:mm a' }} - {{ shift.shift.endTime | date:'h:mm a' }}</div>
+                    </div>
+                    <div *ngIf="isEmployeeOnVacation(employee, day.date)" class="m-1 p-2 rounded bg-info-subtle border-start border-info border-3">
+                      <div class="small fw-bold"><i class="bi bi-airplane me-1"></i>Vacation</div>
+                    </div>
+                    <div *ngIf="!getShiftForEmployeeAndDay(employee, day.date) && !isEmployeeOnVacation(employee, day.date)" 
+                         class="m-1 p-2 rounded border border-light-subtle d-flex justify-content-center align-items-center" 
+                         style="height: 64px; cursor: pointer;" 
+                         (click)="openShiftAssignmentModal(employee, day.date)">
+                      <i class="bi bi-plus-circle text-secondary"></i>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer bg-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <a routerLink="/manager/schedule" class="btn btn-outline-primary">Full Schedule View</a>
+            <button class="btn btn-primary" (click)="openCreateShiftModal()"><i class="bi bi-plus-circle me-2"></i>Create New Shift</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <!-- Pending Approvals -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="mb-0"><i class="bi bi-hourglass-split me-2"></i>Pending Approvals</h5>
+        </div>
+        <div class="card-body p-0">
+          <div *ngIf="pendingVacationRequests.length === 0" class="text-center text-muted py-5">
+            <i class="bi bi-inbox mb-3" style="font-size: 2rem;"></i>
+            <p>No pending vacation requests</p>
+          </div>
+          
+          <ul class="list-group list-group-flush" *ngIf="pendingVacationRequests.length > 0">
+            <li *ngFor="let request of pendingVacationRequests" class="list-group-item">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="fw-bold">{{ request.employee.firstName }} {{ request.employee.lastName }}</div>
+                <span class="badge bg-warning text-dark">Pending</span>
+              </div>
+              <div class="mb-2">
+                <i class="bi bi-calendar-range me-2"></i>
+                {{ request.startDate | date:'MMM d' }} - {{ request.endDate | date:'MMM d, yyyy' }}
+              </div>
+              <div class="mb-2 text-muted small" *ngIf="request.reason">
+                <i class="bi bi-chat-left-text me-2"></i>
+                {{ request.reason }}
+              </div>
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-sm btn-success" (click)="approveVacationRequest(request.id)">
+                  <i class="bi bi-check-circle me-1"></i> Approve
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="rejectVacationRequest(request.id)">
+                  <i class="bi bi-x-circle me-1"></i> Reject
+                </button>
+                <button class="btn btn-sm btn-outline-secondary ms-auto" (click)="viewVacationDetails(request.id)">
+                  <i class="bi bi-info-circle me-1"></i> Details
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="card-footer bg-white">
+          <a routerLink="/manager/vacation-requests" class="btn btn-outline-warning d-block">View All Requests</a>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0"><i class="bi bi-lightning-charge me-2"></i>Quick Actions</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <a routerLink="/manager/team" class="btn btn-outline-primary d-flex align-items-center justify-content-between">
+              <span><i class="bi bi-people me-2"></i>Manage Team</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+            <a routerLink="/manager/reports" class="btn btn-outline-info d-flex align-items-center justify-content-between">
+              <span><i class="bi bi-file-earmark-text me-2"></i>Generate Reports</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+            <a routerLink="/manager/schedule" class="btn btn-outline-success d-flex align-items-center justify-content-between">
+              <span><i class="bi bi-calendar-plus me-2"></i>Create Schedule</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+            <button class="btn btn-outline-secondary d-flex align-items-center justify-content-between" (click)="openEmailTeamModal()">
+              <span><i class="bi bi-envelope me-2"></i>Email Team</span>
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal templates would go here -->
+<!-- For example, shift assignment modal, create shift modal, etc. -->

@@ -1,0 +1,38 @@
+// Stat cards with hover effect
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+// Table styling
+.table td {
+  vertical-align: middle;
+}
+
+// Selected shift details in swap modal
+.selected-shift-details {
+  border-left: 4px solid #0d6efd;
+}
+
+// Button group styles
+.btn-group {
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn i {
+    font-size: 1rem;
+  }
+}
+
+// Filter buttons
+.btn-outline-primary.active {
+  background-color: #0d6efd;
+  color: white;
+}

@@ -1,77 +1,49 @@
 package com.shiftmanager.api.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
-
-/**
- * Person entity, base class for all personnel
- */
 @Entity
-@Table(name = "person")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "persons")
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "person_type", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("PERSON")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-public class Person extends BaseEntity {
-
-    @NotBlank(message = "First name is required")
-    @Size(max = 50, message = "First name cannot exceed 50 characters")
+public abstract class Person {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     @Column(name = "first_name", nullable = false)
     private String firstName;
-
-    @NotBlank(message = "Last name is required")
-    @Size(max = 50, message = "Last name cannot exceed 50 characters")
+    
     @Column(name = "last_name", nullable = false)
     private String lastName;
-
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
-    @Size(max = 100, message = "Email cannot exceed 100 characters")
-    @Column(name = "email", nullable = false, unique = true)
+    
+    @Column(nullable = false, unique = true)
     private String email;
-
-    @Size(max = 20, message = "Phone number cannot exceed 20 characters")
+    
     @Column(name = "phone_number")
     private String phoneNumber;
-
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Address> addresses = new HashSet<>();
-
-    /**
-     * Add an address to the person
-     * @param address the address to add
-     * @return the address
-     */
-    public Address addAddress(Address address) {
-        addresses.add(address);
-        address.setPerson(this);
-        return address;
-    }
-
-    /**
-     * Remove an address from the person
-     * @param address the address to remove
-     */
-    public void removeAddress(Address address) {
-        addresses.remove(address);
-        address.setPerson(null);
-    }
-
-    /**
-     * Get the full name of the person
-     * @return the full name
-     */
-    @Transient
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
+    
     public String getFullName() {
         return firstName + " " + lastName;
     }

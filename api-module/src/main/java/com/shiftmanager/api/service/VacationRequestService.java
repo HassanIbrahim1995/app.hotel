@@ -1,6 +1,7 @@
 package com.shiftmanager.api.service;
 
 import com.shiftmanager.api.dto.VacationRequestDTO;
+import com.shiftmanager.api.model.VacationRequest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +14,15 @@ public interface VacationRequestService {
     
     /**
      * Get all vacation requests
+     * @param startDate Optional start date filter
+     * @param endDate Optional end date filter
+     * @param status Optional status filter
+     * @return List of vacation request entities
+     */
+    List<VacationRequest> getAllVacationRequests(LocalDate startDate, LocalDate endDate, String status);
+    
+    /**
+     * Get all vacation requests (no filters)
      * @return List of vacation request DTOs
      */
     List<VacationRequestDTO> getAllVacationRequests();
@@ -20,9 +30,9 @@ public interface VacationRequestService {
     /**
      * Get vacation request by ID
      * @param id Vacation request ID
-     * @return Optional vacation request DTO
+     * @return Vacation request entity
      */
-    Optional<VacationRequestDTO> getVacationRequestById(Long id);
+    VacationRequest getVacationRequestById(Long id);
     
     /**
      * Create a new vacation request
@@ -34,16 +44,22 @@ public interface VacationRequestService {
     /**
      * Update an existing vacation request
      * @param id Vacation request ID
-     * @param vacationRequestDTO Updated vacation request data
-     * @return Updated vacation request DTO
+     * @param vacationRequest Updated vacation request data
+     * @return Updated vacation request entity
      */
-    VacationRequestDTO updateVacationRequest(Long id, VacationRequestDTO vacationRequestDTO);
+    VacationRequest updateVacationRequest(Long id, VacationRequest vacationRequest);
     
     /**
      * Delete a vacation request
      * @param id Vacation request ID
      */
     void deleteVacationRequest(Long id);
+    
+    /**
+     * Cancel a vacation request
+     * @param id Vacation request ID
+     */
+    void cancelVacationRequest(Long id);
     
     /**
      * Get pending vacation requests for a manager to review
@@ -86,4 +102,14 @@ public interface VacationRequestService {
      * @return Calendar data with approved vacation days
      */
     byte[] generateVacationCalendar(Long locationId, LocalDate startDate, LocalDate endDate);
+    
+    /**
+     * Check if an employee has vacation conflicts for a date range
+     * @param employeeId Employee ID
+     * @param startDate Start date
+     * @param endDate End date
+     * @param excludeRequestId Optional request ID to exclude from check
+     * @return True if conflicts exist, false otherwise
+     */
+    boolean hasVacationConflicts(Long employeeId, LocalDate startDate, LocalDate endDate, Long excludeRequestId);
 }

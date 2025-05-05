@@ -1,0 +1,41 @@
+// Custom styles for the employee dashboard
+
+// Card hover effect
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+// List group items in the upcoming shifts section
+.list-group-item {
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+}
+
+// Quick action buttons
+.btn-outline-primary, 
+.btn-outline-info, 
+.btn-outline-success, 
+.btn-outline-secondary {
+  text-align: left;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateX(5px);
+  }
+  
+  .bi-chevron-right {
+    transition: transform 0.2s ease;
+  }
+  
+  &:hover .bi-chevron-right {
+    transform: translateX(5px);
+  }
+}

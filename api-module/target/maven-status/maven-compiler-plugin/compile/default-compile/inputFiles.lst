@@ -4,6 +4,7 @@
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/model/CalendarEntry.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ShiftServiceImpl.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/dto/VacationRequestDTO.java
+/home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/ShiftTypeController.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/LocationController.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/repository/LocationRepository.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ManagerServiceImpl.java
@@ -35,6 +36,9 @@
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/ShiftController.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/model/Role.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/model/VacationRequest.java
+/home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/ShiftTypeMapper.java
+/home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/exception/ValidationException.java
+/home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/ShiftTypeService.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/AddressMapper.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/model/Address.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/repository/VacationRequestRepository.java
@@ -56,13 +60,14 @@
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/ReportController.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/model/EmployeeShift.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/VacationRequestController.java
-/home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/repository/EmployeeShiftRepository.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/repository/RoleRepository.java
+/home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/repository/EmployeeShiftRepository.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/repository/CalendarEntryRepository.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/model/Calendar.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/validation/ValidationService.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/mapper/VacationRequestMapper.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/controller/AuthController.java
+/home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/service/impl/ShiftTypeServiceImpl.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/security/JwtAuthenticationFilter.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/security/CustomUserDetailsService.java
 /home/runner/workspace/api-module/src/main/java/com/shiftmanager/api/model/Shift.java

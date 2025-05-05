@@ -1,107 +1,74 @@
 package com.shiftmanager.api.controller;
 
-import com.shiftmanager.api.dto.LocationDTO;
-import com.shiftmanager.api.mapper.LocationMapper;
-import com.shiftmanager.api.model.Location;
-import com.shiftmanager.api.service.LocationService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.shiftmanager.api.dto.LocationDTO;
+import com.shiftmanager.api.service.LocationService;
 
 import jakarta.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-/**
- * Controller for location operations
- */
 @RestController
 @RequestMapping("/api/locations")
 public class LocationController {
-
+    
+    private final LocationService locationService;
+    
     @Autowired
-    private LocationService locationService;
-
-    @Autowired
-    private LocationMapper locationMapper;
-
-    /**
-     * Get all locations
-     * @return List of locations
-     */
+    public LocationController(LocationService locationService) {
+        this.locationService = locationService;
+    }
+    
     @GetMapping
     public ResponseEntity<List<LocationDTO>> getAllLocations() {
-        List<Location> locations = locationService.getAllLocations();
-        List<LocationDTO> locationDTOs = locations.stream()
-                .map(locationMapper::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(locationDTOs);
+        List<LocationDTO> locations = locationService.getAllLocations();
+        return ResponseEntity.ok(locations);
     }
-
-    /**
-     * Get location by ID
-     * @param id Location ID
-     * @return Location
-     */
+    
     @GetMapping("/{id}")
     public ResponseEntity<LocationDTO> getLocationById(@PathVariable Long id) {
-        Location location = locationService.getLocationById(id);
-        LocationDTO locationDTO = locationMapper.toDto(location);
-
-        return ResponseEntity.ok(locationDTO);
+        LocationDTO location = locationService.getLocationById(id);
+        return ResponseEntity.ok(location);
     }
-
-    /**
-     * Create location (admin only)
-     * @param locationDTO Location data
-     * @return Created location
-     */
+    
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LocationDTO> createLocation(@Valid @RequestBody LocationDTO locationDTO) {
-        Location location = locationMapper.toEntity(locationDTO);
-        Location createdLocation = locationService.createLocation(location);
-        LocationDTO createdLocationDTO = locationMapper.toDto(createdLocation);
-
-        return ResponseEntity.ok(createdLocationDTO);
+        LocationDTO createdLocation = locationService.createLocation(locationDTO);
+        return new ResponseEntity<>(createdLocation, HttpStatus.CREATED);
     }
-
-    /**
-     * Update location (admin only)
-     * @param id Location ID
-     * @param locationDTO Location data
-     * @return Updated location
-     */
+    
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LocationDTO> updateLocation(
-            @PathVariable Long id,
+            @PathVariable Long id, 
             @Valid @RequestBody LocationDTO locationDTO) {
-
-        Location location = locationMapper.toEntity(locationDTO);
-        Location updatedLocation = locationService.updateLocation(id, location);
-        LocationDTO updatedLocationDTO = locationMapper.toDto(updatedLocation);
-
-        return ResponseEntity.ok(updatedLocationDTO);
+        LocationDTO updatedLocation = locationService.updateLocation(id, locationDTO);
+        return ResponseEntity.ok(updatedLocation);
     }
-
-    /**
-     * Delete location (admin only)
-     * @param id Location ID
-     * @return Delete status
-     */
+    
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Map<String, Boolean>> deleteLocation(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         locationService.deleteLocation(id);
-
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/active")
+    public ResponseEntity<List<LocationDTO>> getActiveLocations() {
+        List<LocationDTO> locations = locationService.getActiveLocations();
+        return ResponseEntity.ok(locations);
     }
 }

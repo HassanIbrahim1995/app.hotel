@@ -1,0 +1,198 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Vacation Requests</h1>
+    <button class="btn btn-primary" (click)="openNewRequestModal()">
+      <i class="bi bi-plus-circle me-2"></i>New Request
+    </button>
+  </div>
+  
+  <!-- Request Status Tabs -->
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'all'" (click)="filterRequests('all')" href="javascript:void(0)">
+        All <span class="badge bg-secondary ms-1">{{ allRequests.length }}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'pending'" (click)="filterRequests('pending')" href="javascript:void(0)">
+        Pending <span class="badge bg-warning text-dark ms-1">{{ getPendingCount() }}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'approved'" (click)="filterRequests('approved')" href="javascript:void(0)">
+        Approved <span class="badge bg-success ms-1">{{ getApprovedCount() }}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'rejected'" (click)="filterRequests('rejected')" href="javascript:void(0)">
+        Rejected <span class="badge bg-danger ms-1">{{ getRejectedCount() }}</span>
+      </a>
+    </li>
+  </ul>
+  
+  <!-- Vacation Requests Table -->
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div *ngIf="filteredRequests.length === 0" class="text-center text-muted py-5">
+        <i class="bi bi-calendar-x mb-3" style="font-size: 2rem;"></i>
+        <p>No vacation requests found</p>
+        <button class="btn btn-primary" (click)="openNewRequestModal()">
+          <i class="bi bi-plus-circle me-2"></i>Create New Request
+        </button>
+      </div>
+      
+      <div class="table-responsive" *ngIf="filteredRequests.length > 0">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Date Range</th>
+              <th>Days</th>
+              <th>Reason</th>
+              <th>Request Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of filteredRequests">
+              <td>
+                <span class="d-block fw-bold">{{ request.startDate | date:'MMM d, yyyy' }}</span>
+                <span class="d-block text-muted">to {{ request.endDate | date:'MMM d, yyyy' }}</span>
+              </td>
+              <td>{{ calculateDays(request.startDate, request.endDate) }}</td>
+              <td>{{ request.reason || 'N/A' }}</td>
+              <td>{{ request.requestDate | date:'MMM d, yyyy' }}</td>
+              <td>
+                <span class="badge" [ngClass]="getStatusBadgeClass(request.status)">{{ request.status }}</span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn btn-outline-primary btn-sm" (click)="viewRequestDetails(request)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button *ngIf="request.status === 'PENDING'" class="btn btn-outline-danger btn-sm" (click)="cancelRequest(request.id)">
+                    <i class="bi bi-x-circle"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Vacation Request Modal -->
+<div class="modal fade" id="newRequestModal" tabindex="-1" aria-labelledby="newRequestModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="newRequestModalLabel">New Vacation Request</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="vacationForm">
+          <div class="mb-3">
+            <label for="startDate" class="form-label">Start Date *</label>
+            <input type="date" class="form-control" id="startDate" formControlName="startDate">
+            <div *ngIf="submitted && f.startDate.errors" class="text-danger">
+              <small *ngIf="f.startDate.errors.required">Start date is required</small>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="endDate" class="form-label">End Date *</label>
+            <input type="date" class="form-control" id="endDate" formControlName="endDate">
+            <div *ngIf="submitted && f.endDate.errors" class="text-danger">
+              <small *ngIf="f.endDate.errors.required">End date is required</small>
+            </div>
+            <div *ngIf="vacationForm.errors?.dateRange" class="text-danger">
+              <small>End date must be after start date</small>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="reason" class="form-label">Reason</label>
+            <textarea class="form-control" id="reason" rows="3" formControlName="reason" placeholder="Please provide a reason for your vacation request"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="submitVacationRequest()" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          Submit Request
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vacation Request Details Modal -->
+<div class="modal fade" id="requestDetailsModal" tabindex="-1" aria-labelledby="requestDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" *ngIf="selectedRequest">
+      <div class="modal-header" [ngClass]="getStatusHeaderClass(selectedRequest.status)">
+        <h5 class="modal-title" id="requestDetailsModalLabel">Vacation Request Details</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <h6>Start Date</h6>
+            <p>{{ selectedRequest.startDate | date:'EEEE, MMMM d, yyyy' }}</p>
+          </div>
+          <div class="col-md-6">
+            <h6>End Date</h6>
+            <p>{{ selectedRequest.endDate | date:'EEEE, MMMM d, yyyy' }}</p>
+          </div>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <h6>Total Days</h6>
+            <p>{{ calculateDays(selectedRequest.startDate, selectedRequest.endDate) }}</p>
+          </div>
+          <div class="col-md-6">
+            <h6>Status</h6>
+            <span class="badge" [ngClass]="getStatusBadgeClass(selectedRequest.status)">{{ selectedRequest.status }}</span>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <h6>Request Date</h6>
+          <p>{{ selectedRequest.requestDate | date:'EEEE, MMMM d, yyyy, h:mm a' }}</p>
+        </div>
+        
+        <div class="mb-3" *ngIf="selectedRequest.reason">
+          <h6>Reason</h6>
+          <p>{{ selectedRequest.reason }}</p>
+        </div>
+        
+        <div *ngIf="selectedRequest.status !== 'PENDING'">
+          <div class="mb-3" *ngIf="selectedRequest.reviewDate">
+            <h6>Review Date</h6>
+            <p>{{ selectedRequest.reviewDate | date:'EEEE, MMMM d, yyyy, h:mm a' }}</p>
+          </div>
+          
+          <div class="mb-3" *ngIf="selectedRequest.reviewedBy">
+            <h6>Reviewed By</h6>
+            <p>{{ selectedRequest.reviewedBy }}</p>
+          </div>
+          
+          <div class="mb-3" *ngIf="selectedRequest.reviewNotes">
+            <h6>Review Notes</h6>
+            <p>{{ selectedRequest.reviewNotes }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button *ngIf="selectedRequest.status === 'PENDING'" type="button" class="btn btn-danger" (click)="cancelRequest(selectedRequest.id)">
+          Cancel Request
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

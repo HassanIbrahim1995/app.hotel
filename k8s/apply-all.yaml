@@ -1,0 +1,31 @@
+# Namespace
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shift-manager
+  labels:
+    name: shift-manager
+
+# Include all PostgreSQL resources
+---
+include:
+- postgres/secret.yaml
+- postgres/configmap.yaml
+- postgres/pvc.yaml
+- postgres/statefulset.yaml
+- postgres/service.yaml
+
+# Include all API resources
+---
+include:
+- api/configmap.yaml
+- api/deployment.yaml
+- api/service.yaml
+
+# Include all Web Client resources
+---
+include:
+- web-client/deployment.yaml
+- web-client/service.yaml
+- web-client/ingress.yaml

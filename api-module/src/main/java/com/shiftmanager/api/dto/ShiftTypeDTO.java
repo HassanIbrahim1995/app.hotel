@@ -1,63 +1,32 @@
 package com.shiftmanager.api.dto;
 
 import java.time.LocalTime;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * DTO for shift type
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ShiftTypeDTO {
     private Long id;
+    
+    @NotBlank(message = "Name is required")
     private String name;
+    
     private String description;
+    
+    @NotNull(message = "Default start time is required")
     private LocalTime defaultStartTime;
+    
+    @NotNull(message = "Default end time is required")
     private LocalTime defaultEndTime;
+    
+    @NotBlank(message = "Color is required")
     private String color;
     
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    public LocalTime getDefaultStartTime() {
-        return defaultStartTime;
-    }
-    
-    public void setDefaultStartTime(LocalTime defaultStartTime) {
-        this.defaultStartTime = defaultStartTime;
-    }
-    
-    public LocalTime getDefaultEndTime() {
-        return defaultEndTime;
-    }
-    
-    public void setDefaultEndTime(LocalTime defaultEndTime) {
-        this.defaultEndTime = defaultEndTime;
-    }
-    
-    public String getColor() {
-        return color;
-    }
-    
-    public void setColor(String color) {
-        this.color = color;
-    }
+    @NotNull(message = "Active status is required")
+    private Boolean active = true;
 }

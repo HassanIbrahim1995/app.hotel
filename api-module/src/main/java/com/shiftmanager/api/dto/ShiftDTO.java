@@ -1,46 +1,41 @@
 package com.shiftmanager.api.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Set;
-
-/**
- * Data Transfer Object for Shift
- */
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShiftDTO {
-    
     private Long id;
     
     @NotNull(message = "Shift date is required")
+    @FutureOrPresent(message = "Shift date cannot be in the past")
     private LocalDate shiftDate;
     
-    // ShiftType information (start/end times come from the shift type)
-    private Long shiftTypeId;
-    private String shiftTypeName;
+    @NotNull(message = "Start time is required")
     private LocalTime startTime;
+    
+    @NotNull(message = "End time is required")
     private LocalTime endTime;
     
-    // Location information
-    private Long locationId;
-    private String locationName;
+    @NotNull(message = "Location is required")
+    private LocationDTO location;
     
-    // Calculated fields
-    private Double durationHours;
-    private Boolean isOvertime;
+    @NotNull(message = "Shift type is required")
+    private ShiftTypeDTO shiftType;
     
-    // Employee assignments
-    private Set<EmployeeShiftDTO> employeeShifts;
+    private String note;
     
-    // For simple creation/updates
-    private String status; // Used when assigning an employee directly
+    private Long createdById;
+    
+    private LocalDateTime createdAt;
+    
+    private LocalDateTime updatedAt;
 }

@@ -247,4 +247,127 @@ public class CalendarServiceImpl implements CalendarService {
         
         return calendarRepository.findByManagerId(managerId);
     }
+    
+    @Override
+    public List<Calendar> getAllCalendars() {
+        logger.debug("Getting all calendars");
+        return calendarRepository.findAll();
+    }
+    
+    @Override
+    public CalendarEntry createCalendarEntry(Long calendarId, CalendarEntry entry) {
+        logger.debug("Creating calendar entry for calendar ID: {}", calendarId);
+        
+        Calendar calendar = calendarRepository.findById(calendarId)
+                .orElseThrow(() -> new ResourceNotFoundException("Calendar not found with ID: " + calendarId));
+        
+        entry.setCalendar(calendar);
+        return calendarEntryRepository.save(entry);
+    }
+    
+    @Override
+    public CalendarEntry updateCalendarEntry(Long calendarId, Long entryId, CalendarEntry entry) {
+        logger.debug("Updating entry ID: {} in calendar ID: {}", entryId, calendarId);
+        
+        // Verify calendar exists
+        if (!calendarRepository.existsById(calendarId)) {
+            throw new ResourceNotFoundException("Calendar not found with ID: " + calendarId);
+        }
+        
+        CalendarEntry existingEntry = calendarEntryRepository.findById(entryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Calendar entry not found with ID: " + entryId));
+        
+        // Verify entry belongs to the specified calendar
+        if (!existingEntry.getCalendar().getId().equals(calendarId)) {
+            throw new IllegalArgumentException("Entry ID: " + entryId + " does not belong to calendar ID: " + calendarId);
+        }
+        
+        // Update fields preserving relationships
+        existingEntry.setEntryDate(entry.getEntryDate());
+        existingEntry.setStartTime(entry.getStartTime());
+        existingEntry.setEndTime(entry.getEndTime());
+        existingEntry.setEntryType(entry.getEntryType());
+        existingEntry.setTitle(entry.getTitle());
+        existingEntry.setDescription(entry.getDescription());
+        existingEntry.setAllDay(entry.isAllDay());
+        existingEntry.setColor(entry.getColor());
+        
+        return calendarEntryRepository.save(existingEntry);
+    }
+    
+    @Override
+    public boolean deleteCalendarEntry(Long calendarId, Long entryId) {
+        logger.debug("Deleting entry ID: {} from calendar ID: {}", entryId, calendarId);
+        
+        // Verify calendar exists
+        if (!calendarRepository.existsById(calendarId)) {
+            throw new ResourceNotFoundException("Calendar not found with ID: " + calendarId);
+        }
+        
+        CalendarEntry existingEntry = calendarEntryRepository.findById(entryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Calendar entry not found with ID: " + entryId));
+        
+        // Verify entry belongs to the specified calendar
+        if (!existingEntry.getCalendar().getId().equals(calendarId)) {
+            throw new IllegalArgumentException("Entry ID: " + entryId + " does not belong to calendar ID: " + calendarId);
+        }
+        
+        calendarEntryRepository.delete(existingEntry);
+        return true;
+    }
+    
+    @Override
+    public List<CalendarEntry> getCalendarEntries(Long calendarId, LocalDate startDate, LocalDate endDate) {
+        logger.debug("Getting entries for calendar ID: {} between {} and {}", calendarId, startDate, endDate);
+        
+        // Verify calendar exists
+        if (!calendarRepository.existsById(calendarId)) {
+            throw new ResourceNotFoundException("Calendar not found with ID: " + calendarId);
+        }
+        
+        return calendarEntryRepository.findByCalendarIdAndDateRange(calendarId, startDate, endDate);
+    }
+    
+    @Override
+    public byte[] exportCalendarToPdf(Long employeeId, Integer month, Integer year) {
+        logger.debug("Exporting calendar to PDF for employee ID: {}, month: {}, year: {}", employeeId, month, year);
+        
+        // Get employee calendar
+        Calendar calendar = getOrCreateCalendarForEmployee(employeeId);
+        
+        // Get start and end dates for the month
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+        
+        // Get all entries for the month
+        List<CalendarEntry> entries = getCalendarEntriesForDateRange(calendar.getId(), startDate, endDate);
+        
+        // TODO: Generate PDF with the entries
+        // This would typically be handled by a PDF generation library like iText or PDFBox
+        // For now, just return a placeholder byte array
+        String content = "Calendar for " + calendar.getEmployee().getFirstName() + " " + 
+                calendar.getEmployee().getLastName() + "\n";
+        content += "Month: " + month + ", Year: " + year + "\n\n";
+        
+        for (CalendarEntry entry : entries) {
+            content += entry.getEntryDate() + ": " + entry.getTitle() + "\n";
+        }
+        
+        return content.getBytes();
+    }
+    
+    @Override
+    public List<CalendarEntry> getEmployeeCalendar(Long employeeId, Integer month, Integer year) {
+        logger.debug("Getting calendar for employee ID: {}, month: {}, year: {}", employeeId, month, year);
+        
+        // Get employee calendar
+        Calendar calendar = getOrCreateCalendarForEmployee(employeeId);
+        
+        // Get start and end dates for the month
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+        
+        // Get all entries for the month
+        return getCalendarEntriesForDateRange(calendar.getId(), startDate, endDate);
+    }
 }

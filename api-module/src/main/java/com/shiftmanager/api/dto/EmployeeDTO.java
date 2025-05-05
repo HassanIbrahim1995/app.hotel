@@ -1,52 +1,59 @@
 package com.shiftmanager.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
+import java.time.LocalDate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import java.time.LocalDate;
-import java.util.Set;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * Data Transfer Object for Employee
- * Extends PersonDTO since Employee is a subclass of Person
- */
 @Data
-@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class EmployeeDTO extends PersonDTO {
+public class EmployeeDTO {
+    private Long id;
     
-    @NotBlank(message = "Employee ID is required")
-    @Pattern(regexp = "^[A-Z0-9]{5,15}$", message = "Employee ID must be 5-15 alphanumeric characters")
-    private String employeeId;
+    @NotBlank(message = "First name is required")
+    private String firstName;
+    
+    @NotBlank(message = "Last name is required")
+    private String lastName;
+    
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    private String email;
+    
+    private String phoneNumber;
+    
+    private AddressDTO address;
+    
+    @NotBlank(message = "Employee number is required")
+    private String employeeNumber;
+    
+    @NotBlank(message = "Position is required")
+    private String position;
+    
+    private String department;
     
     @NotNull(message = "Hire date is required")
+    @PastOrPresent(message = "Hire date cannot be in the future")
     private LocalDate hireDate;
     
-    private LocalDate terminationDate;
-    
-    private Boolean isActive;
-    
-    // Employee's manager ID if applicable
     private Long managerId;
     
-    // Location where employee is primarily assigned
-    private Long locationId;
+    private String managerName;
     
-    private String locationName;
+    @Positive(message = "Hourly rate must be positive")
+    private Double hourlyRate;
     
-    // Role information
-    private Long roleId;
+    private Boolean fullTime = true;
     
-    private String roleName;
+    @Min(value = 1, message = "Max hours per week must be at least 1")
+    private Integer maxHoursPerWeek = 40;
     
-    // Upcoming shifts for calendar view
-    private Set<ShiftDTO> upcomingShifts;
+    private String note;
 }

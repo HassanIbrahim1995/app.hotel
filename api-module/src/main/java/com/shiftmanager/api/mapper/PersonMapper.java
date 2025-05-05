@@ -1,32 +1,23 @@
 package com.shiftmanager.api.mapper;
 
 import com.shiftmanager.api.dto.PersonDTO;
-import com.shiftmanager.api.model.Person;
+import com.shiftmanager.api.model.Employee;
 import org.mapstruct.*;
 
 /**
  * Mapper for the Person entity and its DTO
  */
-@Mapper(componentModel = "spring", uses = {})
-public interface PersonMapper extends EntityMapper<PersonDTO, Person> {
+@Mapper(componentModel = "spring", uses = {AddressMapper.class})
+public interface PersonMapper {
     
-    @Override
     @Mapping(target = "fullName", ignore = true)
-    PersonDTO toDto(Person person);
+    PersonDTO toDto(Employee person);
     
-    @Override
-    @Mapping(target = "addresses", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "version", ignore = true)
-    Person toEntity(PersonDTO personDTO);
+    @Mapping(target = "manager", ignore = true)
+    Employee toEntity(PersonDTO personDTO);
     
-    @Override
-    @Mapping(target = "addresses", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "version", ignore = true)
-    Person updateEntityFromDto(PersonDTO personDTO, @MappingTarget Person person);
+    @Mapping(target = "manager", ignore = true)
+    Employee updateEntityFromDto(PersonDTO personDTO, @MappingTarget Employee person);
     
     /**
      * Generate the full name from first and last name
@@ -34,7 +25,7 @@ public interface PersonMapper extends EntityMapper<PersonDTO, Person> {
      * @param dto The DTO to populate
      */
     @AfterMapping
-    default void setFullName(Person person, @MappingTarget PersonDTO dto) {
+    default void setFullName(Employee person, @MappingTarget PersonDTO dto) {
         if (person != null) {
             dto.setFullName(person.getFirstName() + " " + person.getLastName());
         }

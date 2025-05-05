@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: shift-manager-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-shiftmanager}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shiftmanager}
+      POSTGRES_DB: ${POSTGRES_DB:-shiftmanager}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - shift-manager-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shiftmanager"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # API Service
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-api
+    container_name: shift-manager-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shiftmanager
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-shiftmanager}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-shiftmanager}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      JAVA_OPTS: -Xms512m -Xmx1024m
+    ports:
+      - "8080:8080"
+    networks:
+      - shift-manager-network
+    restart: unless-stopped
+
+  # Web Client
+  web-client:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-web
+    container_name: shift-manager-web
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+    networks:
+      - shift-manager-network
+    restart: unless-stopped
+
+networks:
+  shift-manager-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local

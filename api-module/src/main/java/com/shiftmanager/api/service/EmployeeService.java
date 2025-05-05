@@ -1,83 +1,106 @@
 package com.shiftmanager.api.service;
 
-import com.shiftmanager.api.dto.EmployeeDTO;
-import com.shiftmanager.api.dto.ShiftDTO;
-import com.shiftmanager.api.dto.VacationRequestDTO;
-
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-/**
- * Service for managing employees
- */
+import com.shiftmanager.api.dto.EmployeeDTO;
+import com.shiftmanager.api.model.Employee;
+import com.shiftmanager.api.model.Notification;
+import com.shiftmanager.api.model.VacationRequest;
+
 public interface EmployeeService {
     
-    /**
-     * Get all employees
-     * @return List of employee DTOs
-     */
     List<EmployeeDTO> getAllEmployees();
     
-    /**
-     * Get employee by ID
-     * @param id Employee ID
-     * @return Optional employee DTO
-     */
-    Optional<EmployeeDTO> getEmployeeById(Long id);
+    EmployeeDTO getEmployeeById(Long id);
     
-    /**
-     * Create a new employee
-     * @param employeeDTO Employee data
-     * @return Created employee DTO
-     */
+    EmployeeDTO getCurrentEmployee();
+    
     EmployeeDTO createEmployee(EmployeeDTO employeeDTO);
     
-    /**
-     * Update an existing employee
-     * @param id Employee ID
-     * @param employeeDTO Updated employee data
-     * @return Updated employee DTO
-     */
     EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO);
     
-    /**
-     * Delete an employee
-     * @param id Employee ID
-     */
     void deleteEmployee(Long id);
     
-    /**
-     * Get schedule for an employee for a date range
-     * @param employeeId Employee ID
-     * @param startDate Start date
-     * @param endDate End date
-     * @return List of shifts scheduled for the employee in the date range
-     */
-    List<ShiftDTO> getEmployeeSchedule(Long employeeId, LocalDate startDate, LocalDate endDate);
+    List<EmployeeDTO> getEmployeesByManager(Long managerId);
+    
+    List<EmployeeDTO> searchEmployees(String query);
     
     /**
      * Get vacation requests for an employee
      * @param employeeId Employee ID
-     * @return List of vacation requests for the employee
+     * @return List of vacation requests
      */
-    List<VacationRequestDTO> getEmployeeVacationRequests(Long employeeId);
+    List<VacationRequest> getEmployeeVacationRequests(Long employeeId);
     
     /**
-     * Generate a personal calendar for an employee with their shifts and vacation days
+     * Get vacation requests for an employee with the specified status
+     * @param employeeId Employee ID
+     * @param status Status filter (optional)
+     * @return List of vacation requests matching the criteria
+     */
+    List<VacationRequest> getEmployeeVacationRequestsByStatus(Long employeeId, String status);
+    
+    /**
+     * Create a new vacation request for an employee
+     * @param employeeId Employee ID
+     * @param vacationRequest Vacation request data
+     * @return Created vacation request
+     */
+    VacationRequest createVacationRequest(Long employeeId, VacationRequest vacationRequest);
+    
+    /**
+     * Check if the specified date range has conflicts with existing vacation requests
      * @param employeeId Employee ID
      * @param startDate Start date
      * @param endDate End date
-     * @return Calendar data with shifts and vacation days
+     * @param requestId Vacation request ID to exclude from check (optional)
+     * @return true if conflicts exist
      */
-    byte[] generateEmployeeCalendar(Long employeeId, LocalDate startDate, LocalDate endDate);
+    boolean hasVacationConflicts(Long employeeId, LocalDate startDate, LocalDate endDate, Long requestId);
     
     /**
-     * Export employee schedule to PDF
+     * Get employee notifications
      * @param employeeId Employee ID
-     * @param startDate Start date
-     * @param endDate End date
-     * @return PDF document as byte array
+     * @param unreadOnly Only include unread notifications if true
+     * @return List of notifications
      */
-    byte[] exportScheduleToPdf(Long employeeId, LocalDate startDate, LocalDate endDate);
+    List<Notification> getEmployeeNotifications(Long employeeId, boolean unreadOnly);
+    
+    /**
+     * Get count of unread notifications for an employee
+     * @param employeeId Employee ID
+     * @return Count of unread notifications
+     */
+    int getUnreadNotificationsCount(Long employeeId);
+    
+    /**
+     * Mark a notification as read
+     * @param employeeId Employee ID
+     * @param notificationId Notification ID
+     */
+    void markNotificationAsRead(Long employeeId, Long notificationId);
+    
+    /**
+     * Mark all notifications for an employee as read
+     * @param employeeId Employee ID
+     */
+    void markAllNotificationsAsRead(Long employeeId);
+    
+    /**
+     * Get employee statistics for a year or month
+     * @param employeeId Employee ID
+     * @param year Year
+     * @param month Month (optional)
+     * @return Statistics data
+     */
+    Map<String, Object> getEmployeeStatistics(Long employeeId, Integer year, Integer month);
+    
+    /**
+     * Get employee by ID (model entity)
+     * @param id Employee ID
+     * @return Employee entity
+     */
+    Employee getEmployeeEntity(Long id);
 }

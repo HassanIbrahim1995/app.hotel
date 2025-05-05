@@ -1,0 +1,35 @@
+// Custom styles for manager dashboard
+
+// Shift item styles
+.table td,
+.table th {
+  padding: 0.5rem;
+  vertical-align: middle;
+}
+
+// Animation for statistic cards
+.card {
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+// Quick actions button styling
+.btn-outline-primary,
+.btn-outline-info,
+.btn-outline-success,
+.btn-outline-secondary {
+  text-align: left;
+  transition: all 0.3s ease;
+  
+  .bi-chevron-right {
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    .bi-chevron-right {
+      transform: translateX(5px);
+    }
+  }
+}

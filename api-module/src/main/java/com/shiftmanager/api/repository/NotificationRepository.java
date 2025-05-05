@@ -46,4 +46,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
      * @return List of notifications
      */
     List<Notification> findByReferenceId(Long referenceId);
+    
+    /**
+     * Count unread notifications by employee
+     * @param employee Employee
+     * @return Count of unread notifications
+     */
+    int countByEmployeeAndReadFalse(Employee employee);
 }

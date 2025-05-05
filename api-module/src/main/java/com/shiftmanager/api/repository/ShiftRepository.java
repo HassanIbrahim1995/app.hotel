@@ -1,56 +1,49 @@
 package com.shiftmanager.api.repository;
 
-import com.shiftmanager.api.model.Location;
-import com.shiftmanager.api.model.Shift;
-import com.shiftmanager.api.model.ShiftType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Repository for Shift entity
- */
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.shiftmanager.api.model.Shift;
+
 @Repository
 public interface ShiftRepository extends JpaRepository<Shift, Long> {
     
-    /**
-     * Find shifts by date
-     * @param shiftDate Shift date
-     * @return List of shifts
-     */
-    List<Shift> findByShiftDate(LocalDate shiftDate);
+    @Query("SELECT s FROM Shift s WHERE s.shiftDate BETWEEN :startDate AND :endDate ORDER BY s.shiftDate, s.startTime")
+    List<Shift> findByDateRange(
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
+    );
+    
+    @Query("SELECT s FROM Shift s WHERE s.location.id = :locationId AND s.shiftDate BETWEEN :startDate AND :endDate ORDER BY s.shiftDate, s.startTime")
+    List<Shift> findByLocationAndDateRange(
+        @Param("locationId") Long locationId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
+    );
+    
+    @Query("SELECT s FROM Shift s WHERE s.shiftType.id = :shiftTypeId AND s.shiftDate BETWEEN :startDate AND :endDate ORDER BY s.shiftDate, s.startTime")
+    List<Shift> findByShiftTypeAndDateRange(
+        @Param("shiftTypeId") Long shiftTypeId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
+    );
     
     /**
-     * Find shifts by date range
+     * Find shifts for employees in a manager's team within a date range
+     * @param managerId Manager ID
      * @param startDate Start date
      * @param endDate End date
      * @return List of shifts
      */
-    List<Shift> findByShiftDateBetween(LocalDate startDate, LocalDate endDate);
-    
-    /**
-     * Find shifts by location
-     * @param location Location
-     * @return List of shifts
-     */
-    List<Shift> findByLocation(Location location);
-    
-    /**
-     * Find shifts by shift type
-     * @param shiftType Shift type
-     * @return List of shifts
-     */
-    List<Shift> findByShiftType(ShiftType shiftType);
-    
-    /**
-     * Find shifts by location and date range
-     * @param location Location
-     * @param startDate Start date
-     * @param endDate End date
-     * @return List of shifts
-     */
-    List<Shift> findByLocationAndShiftDateBetween(Location location, LocalDate startDate, LocalDate endDate);
+    @Query("SELECT DISTINCT s FROM Shift s JOIN EmployeeShift es ON es.shift = s WHERE es.employee.manager.id = :managerId AND s.shiftDate BETWEEN :startDate AND :endDate ORDER BY s.shiftDate, s.startTime")
+    List<Shift> findByEmployeesInManagerTeamAndDateRange(
+        @Param("managerId") Long managerId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
+    );
 }

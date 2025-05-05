@@ -1,6 +1,7 @@
 package com.shiftmanager.api.mapper;
 
 import java.util.List;
+import org.mapstruct.MappingTarget;
 
 /**
  * Generic interface for entity to DTO mapping and vice versa
@@ -22,6 +23,14 @@ public interface EntityMapper<D, E> {
      * @return Converted entity
      */
     E toEntity(D dto);
+    
+    /**
+     * Update entity from DTO
+     * @param dto DTO with updated values
+     * @param entity Entity to update
+     * @return Updated entity
+     */
+    E updateEntityFromDto(D dto, @MappingTarget E entity);
     
     /**
      * Convert list of entities to list of DTOs

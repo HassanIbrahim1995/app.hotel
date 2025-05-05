@@ -51,10 +51,10 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     }
     
     @Override
-    public Optional<VacationRequestDTO> getVacationRequestById(Long id) {
+    public VacationRequest getVacationRequestById(Long id) {
         logger.debug("Getting vacation request with ID: {}", id);
         return vacationRequestRepository.findById(id)
-                .map(vacationRequestMapper::toDto);
+                .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + id));
     }
     
     @Override
@@ -97,24 +97,22 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     }
     
     @Override
-    public VacationRequestDTO updateVacationRequest(Long id, VacationRequestDTO vacationRequestDTO) {
+    public VacationRequest updateVacationRequest(Long id, VacationRequest vacationRequest) {
         logger.debug("Updating vacation request with ID: {}", id);
         
-        return vacationRequestRepository.findById(id)
-                .map(vacationRequest -> {
-                    // Only update if the request is still pending
-                    if (!vacationRequest.isPending()) {
-                        throw new IllegalStateException("Cannot update vacation request that has already been processed.");
-                    }
-                    
-                    vacationRequest.setStartDate(vacationRequestDTO.getStartDate());
-                    vacationRequest.setEndDate(vacationRequestDTO.getEndDate());
-                    vacationRequest.setRequestNotes(vacationRequestDTO.getRequestNotes());
-                    
-                    VacationRequest updatedRequest = vacationRequestRepository.save(vacationRequest);
-                    return vacationRequestMapper.toDto(updatedRequest);
-                })
+        VacationRequest existingRequest = vacationRequestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + id));
+                
+        // Only update if the request is still pending
+        if (!existingRequest.isPending()) {
+            throw new IllegalStateException("Cannot update vacation request that has already been processed.");
+        }
+        
+        existingRequest.setStartDate(vacationRequest.getStartDate());
+        existingRequest.setEndDate(vacationRequest.getEndDate());
+        existingRequest.setRequestNotes(vacationRequest.getRequestNotes());
+        
+        return vacationRequestRepository.save(existingRequest);
     }
     
     @Override
@@ -216,6 +214,56 @@ public class VacationRequestServiceImpl implements VacationRequestService {
         // This would typically integrate with a calendar generation library
         // For now, we'll return a placeholder
         return new byte[0]; // Placeholder implementation
+    }
+    
+    @Override
+    public void cancelVacationRequest(Long id) {
+        logger.debug("Canceling vacation request with ID: {}", id);
+        
+        VacationRequest vacationRequest = vacationRequestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + id));
+        
+        // Only allow cancellation of pending requests
+        if (!vacationRequest.isPending()) {
+            throw new IllegalStateException("Cannot cancel vacation request that has already been processed.");
+        }
+        
+        vacationRequest.setStatus("CANCELLED");
+        vacationRequestRepository.save(vacationRequest);
+    }
+    
+    @Override
+    public List<VacationRequest> getAllVacationRequests(LocalDate startDate, LocalDate endDate, String status) {
+        logger.debug("Getting all vacation requests with filters - startDate: {}, endDate: {}, status: {}", 
+                 startDate, endDate, status);
+        
+        if (startDate != null && endDate != null) {
+            if (status != null) {
+                return vacationRequestRepository.findByDateRangeAndStatus(startDate, endDate, status);
+            } else {
+                return vacationRequestRepository.findByDateRange(startDate, endDate);
+            }
+        } else if (status != null) {
+            return vacationRequestRepository.findByStatus(status);
+        } else {
+            return vacationRequestRepository.findAll();
+        }
+    }
+    
+    @Override
+    public boolean hasVacationConflicts(Long employeeId, LocalDate startDate, LocalDate endDate, Long excludeRequestId) {
+        logger.debug("Checking vacation conflicts for employee ID: {} from {} to {}, excluding request ID: {}",
+                 employeeId, startDate, endDate, excludeRequestId);
+        
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + employeeId));
+        
+        try {
+            checkForOverlappingVacations(employee, startDate, endDate, excludeRequestId);
+            return false; // No conflicts found
+        } catch (IllegalStateException e) {
+            return true; // Conflicts found
+        }
     }
     
     /**

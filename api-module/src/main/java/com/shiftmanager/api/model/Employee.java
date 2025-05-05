@@ -1,94 +1,96 @@
 package com.shiftmanager.api.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Employee entity - extends Person
- */
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Table(name = "employees")
 @DiscriminatorValue("EMPLOYEE")
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class Employee extends Person {
-
-    @NotBlank(message = "Employee ID is required")
-    @Size(max = 20, message = "Employee ID cannot exceed 20 characters")
-    @Column(name = "employee_id", nullable = false, unique = true)
-    private String employeeId;
-
-    @NotNull(message = "Hire date is required")
+    
+    @Column(name = "employee_number", nullable = false, unique = true)
+    private String employeeNumber;
+    
+    @Column(nullable = false)
+    private String position;
+    
+    private String department;
+    
     @Column(name = "hire_date", nullable = false)
     private LocalDate hireDate;
-
-    @NotBlank(message = "Job title is required")
-    @Size(max = 100, message = "Job title cannot exceed 100 characters")
-    @Column(name = "job_title", nullable = false)
-    private String jobTitle;
-
-    @Size(max = 100, message = "Department cannot exceed 100 characters")
-    @Column(name = "department")
-    private String department;
-
-    @NotBlank(message = "Status is required")
-    @Size(max = 20, message = "Status cannot exceed 20 characters")
-    @Column(name = "status", nullable = false)
-    private String status;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id", nullable = false)
-    private Location location;
-
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Employee manager;
-
-    @OneToMany(mappedBy = "manager")
-    private Set<Employee> subordinates = new HashSet<>();
-
-    @OneToMany(mappedBy = "employee")
-    private Set<EmployeeShift> shifts = new HashSet<>();
-
-    @OneToMany(mappedBy = "employee")
-    private Set<VacationRequest> vacationRequests = new HashSet<>();
-
-    @OneToMany(mappedBy = "employee")
-    private Set<Notification> notifications = new HashSet<>();
-
-    /**
-     * Add a subordinate employee
-     * @param employee The subordinate to add
-     */
-    public void addSubordinate(Employee employee) {
-        subordinates.add(employee);
-        employee.setManager(this);
+    
+    @Column(name = "hourly_rate")
+    private Double hourlyRate;
+    
+    @Column(name = "full_time")
+    private Boolean fullTime = true;
+    
+    @Column(name = "max_hours_per_week")
+    private Integer maxHoursPerWeek = 40;
+    
+    private String note;
+    
+    @Column(name = "status")
+    private String status;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    private Location location;
+    
+    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+    private List<Employee> subordinates = new ArrayList<>();
+    
+    // Getter for fields used in InitialDataLoader
+    public String getEmployeeId() {
+        return employeeNumber;
     }
-
-    /**
-     * Remove a subordinate employee
-     * @param employee The subordinate to remove
-     */
-    public void removeSubordinate(Employee employee) {
-        subordinates.remove(employee);
-        employee.setManager(null);
+    
+    // Setter for fields used in InitialDataLoader
+    public void setEmployeeId(String employeeId) {
+        this.employeeNumber = employeeId;
     }
-
-    /**
-     * Check if employee is active
-     * @return true if employee is active
-     */
-    @Transient
-    public boolean isActive() {
-        return "ACTIVE".equalsIgnoreCase(status);
+    
+    public String getJobTitle() {
+        return position;
+    }
+    
+    public void setJobTitle(String jobTitle) {
+        this.position = jobTitle;
+    }
+    
+    // Helper method to get manager name if available
+    public String getManagerName() {
+        return manager != null ? manager.getFullName() : null;
+    }
+    
+    // Helper method to get manager ID if available
+    public Long getManagerId() {
+        return manager != null ? manager.getId() : null;
+    }
+    
+    // Helper method to get subordinates
+    public List<Employee> getSubordinates() {
+        return subordinates;
     }
 }
