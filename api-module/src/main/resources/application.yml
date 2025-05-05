@@ -1,0 +1,51 @@
+# Application Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# Spring Configuration
+spring:
+  application:
+    name: shift-management-api
+  
+  # Database Configuration
+  datasource:
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+    driver-class-name: org.postgresql.Driver
+  
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+  # Liquibase Configuration
+  liquibase:
+    change-log: classpath:db/changelog/master-changelog.yaml
+    enabled: true
+    parameters:
+      ignore-checksum: true
+
+# Management Endpoints Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.shiftmanager: DEBUG
+    org.hibernate.SQL: DEBUG

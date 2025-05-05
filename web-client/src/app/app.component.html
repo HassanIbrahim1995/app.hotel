@@ -1,0 +1,179 @@
+<div class="app-container">
+  <!-- Bootstrap Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" *ngIf="isLoggedIn">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">{{ title }}</a>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-lg-none" *ngIf="isLoggedIn"> <!-- Mobile menu -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/calendar" routerLinkActive="active">My Calendar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/shifts" routerLinkActive="active">My Shifts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/vacation-requests" routerLinkActive="active">Vacation Requests</a>
+          </li>
+          <li class="nav-item" *ngIf="isManager || isAdmin">
+            <hr class="dropdown-divider">
+          </li>
+          <li class="nav-item" *ngIf="isManager || isAdmin">
+            <a class="nav-link" routerLink="/manager/dashboard" routerLinkActive="active">Manager Dashboard</a>
+          </li>
+          <li class="nav-item" *ngIf="isManager || isAdmin">
+            <a class="nav-link" routerLink="/manager/team" routerLinkActive="active">Team Members</a>
+          </li>
+          <li class="nav-item" *ngIf="isManager || isAdmin">
+            <a class="nav-link" routerLink="/manager/schedule" routerLinkActive="active">Team Schedule</a>
+          </li>
+          <li class="nav-item" *ngIf="isManager || isAdmin">
+            <a class="nav-link" routerLink="/manager/vacation-requests" routerLinkActive="active">Approve Vacations</a>
+          </li>
+          <li class="nav-item" *ngIf="isManager || isAdmin">
+            <a class="nav-link" routerLink="/manager/reports" routerLinkActive="active">Reports</a>
+          </li>
+          <li class="nav-item" *ngIf="isAdmin">
+            <hr class="dropdown-divider">
+          </li>
+          <li class="nav-item" *ngIf="isAdmin">
+            <a class="nav-link" routerLink="/admin/employees" routerLinkActive="active">Employees</a>
+          </li>
+          <li class="nav-item" *ngIf="isAdmin">
+            <a class="nav-link" routerLink="/admin/locations" routerLinkActive="active">Locations</a>
+          </li>
+          <li class="nav-item" *ngIf="isAdmin">
+            <a class="nav-link" routerLink="/admin/shift-types" routerLinkActive="active">Shift Types</a>
+          </li>
+          <li class="nav-item" *ngIf="isAdmin">
+            <a class="nav-link" routerLink="/admin/settings" routerLinkActive="active">Settings</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="d-flex" *ngIf="isLoggedIn">
+        <div class="dropdown">
+          <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-1"></i> {{ userFullName }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" routerLink="/profile"><i class="bi bi-person me-2"></i>Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid app-main">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" *ngIf="isLoggedIn">
+        <div class="position-sticky pt-3">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+                <i class="bi bi-speedometer2 me-2"></i>
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/calendar" routerLinkActive="active">
+                <i class="bi bi-calendar-date me-2"></i>
+                My Calendar
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/shifts" routerLinkActive="active">
+                <i class="bi bi-clock me-2"></i>
+                My Shifts
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/vacation-requests" routerLinkActive="active">
+                <i class="bi bi-umbrella me-2"></i>
+                Vacation Requests
+              </a>
+            </li>
+            
+            <li class="border-top my-3" *ngIf="isManager || isAdmin"></li>
+            
+            <li class="nav-item" *ngIf="isManager || isAdmin">
+              <a class="nav-link" routerLink="/manager/dashboard" routerLinkActive="active">
+                <i class="bi bi-person-badge me-2"></i>
+                Manager Dashboard
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="isManager || isAdmin">
+              <a class="nav-link" routerLink="/manager/team" routerLinkActive="active">
+                <i class="bi bi-people me-2"></i>
+                Team Members
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="isManager || isAdmin">
+              <a class="nav-link" routerLink="/manager/schedule" routerLinkActive="active">
+                <i class="bi bi-calendar-week me-2"></i>
+                Team Schedule
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="isManager || isAdmin">
+              <a class="nav-link" routerLink="/manager/vacation-requests" routerLinkActive="active">
+                <i class="bi bi-airplane me-2"></i>
+                Approve Vacations
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="isManager || isAdmin">
+              <a class="nav-link" routerLink="/manager/reports" routerLinkActive="active">
+                <i class="bi bi-graph-up me-2"></i>
+                Reports
+              </a>
+            </li>
+            
+            <li class="border-top my-3" *ngIf="isAdmin"></li>
+            
+            <li class="nav-item" *ngIf="isAdmin">
+              <a class="nav-link" routerLink="/admin/employees" routerLinkActive="active">
+                <i class="bi bi-person-lines-fill me-2"></i>
+                Employees
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="isAdmin">
+              <a class="nav-link" routerLink="/admin/locations" routerLinkActive="active">
+                <i class="bi bi-geo-alt me-2"></i>
+                Locations
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="isAdmin">
+              <a class="nav-link" routerLink="/admin/shift-types" routerLinkActive="active">
+                <i class="bi bi-clock-history me-2"></i>
+                Shift Types
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="isAdmin">
+              <a class="nav-link" routerLink="/admin/settings" routerLinkActive="active">
+                <i class="bi bi-gear me-2"></i>
+                Settings
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Main content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <ngx-spinner></ngx-spinner>
+        <div class="content-wrapper pt-3">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>

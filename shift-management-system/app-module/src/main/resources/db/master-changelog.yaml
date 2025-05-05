@@ -1,4 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: migration/01-create-initial-tables.yaml
-      relativeToChangelogFile: true
