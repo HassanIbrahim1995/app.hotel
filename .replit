@@ -1,8 +1,8 @@
-modules = ["python-3.11", "java"]
+modules = ["python-3.11", "java", "java-11", "java-21"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["openssl", "postgresql", "maven", "jdk"]
+packages = ["jdk", "maven", "openssl", "postgresql"]
 
 [deployment]
 deploymentTarget = "autoscale"
