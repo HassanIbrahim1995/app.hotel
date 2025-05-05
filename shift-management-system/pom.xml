@@ -26,6 +26,7 @@
         <module>notification-module</module>
         <module>reporting-module</module>
         <module>dashboard-module</module>
+        <module>app-module</module>
     </modules>
 
     <properties>
@@ -163,6 +164,11 @@
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>${liquibase.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

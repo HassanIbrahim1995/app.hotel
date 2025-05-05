@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="1" author="shiftmanagement">
+        <comment>Create employees table</comment>
+        <createTable tableName="employees">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" foreignKeyName="fk_employee_person" references="persons(id)"/>
+            </column>
+            <column name="employee_id" type="varchar(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="hire_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location_id" type="bigint">
+                <constraints foreignKeyName="fk_employee_location" references="locations(id)"/>
+            </column>
+            <column name="job_title" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="department" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hourly_rate" type="decimal(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="manager_id" type="bigint">
+                <constraints foreignKeyName="fk_employee_manager" references="employees(id)"/>
+            </column>
+            <column name="vacation_days_available" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sick_days_available" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="2" author="shiftmanagement">
+        <comment>Create managers table</comment>
+        <createTable tableName="managers">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" foreignKeyName="fk_manager_employee" references="employees(id)"/>
+            </column>
+            <column name="is_senior_manager" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_direct_reports" type="int" defaultValue="10">
+                <constraints nullable="false"/>
+            </column>
+            <column name="management_level" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="3" author="shiftmanagement">
+        <comment>Create manager_locations join table</comment>
+        <createTable tableName="manager_locations">
+            <column name="manager_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_manager_locations_manager" references="managers(id)"/>
+            </column>
+            <column name="location_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_manager_locations_location" references="locations(id)"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="manager_locations" columnNames="manager_id, location_id"/>
+    </changeSet>
+    
+    <changeSet id="4" author="shiftmanagement">
+        <comment>Create vacation_requests table</comment>
+        <createTable tableName="vacation_requests">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="employee_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_vacation_request_employee" references="employees(id)"/>
+            </column>
+            <column name="start_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="varchar(500)"/>
+            <column name="status" type="varchar(20)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reviewed_by" type="bigint">
+                <constraints foreignKeyName="fk_vacation_request_reviewer" references="managers(id)"/>
+            </column>
+            <column name="reviewed_at" type="timestamp"/>
+            <column name="review_notes" type="varchar(500)"/>
+            <column name="days_requested" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_paid_time_off" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(100)" defaultValue="system"/>
+            <column name="updated_at" type="timestamp"/>
+            <column name="updated_by" type="varchar(100)"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="5" author="shiftmanagement">
+        <comment>Add indexes for employee module</comment>
+        <createIndex indexName="idx_employee_employee_id" tableName="employees">
+            <column name="employee_id"/>
+        </createIndex>
+        <createIndex indexName="idx_employee_manager_id" tableName="employees">
+            <column name="manager_id"/>
+        </createIndex>
+        <createIndex indexName="idx_employee_location" tableName="employees">
+            <column name="location_id"/>
+        </createIndex>
+        <createIndex indexName="idx_vacation_request_status" tableName="vacation_requests">
+            <column name="status"/>
+        </createIndex>
+        <createIndex indexName="idx_vacation_request_employee" tableName="vacation_requests">
+            <column name="employee_id"/>
+        </createIndex>
+        <createIndex indexName="idx_vacation_request_dates" tableName="vacation_requests">
+            <column name="start_date"/>
+            <column name="end_date"/>
+        </createIndex>
+    </changeSet>
+    
+</databaseChangeLog>

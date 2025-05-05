@@ -1,0 +1,5 @@
+# This defines a workflow to run our Java application
+
+[workflow]
+name = "Shift Management Application"
+entrypoint = "./run_java_app.sh"

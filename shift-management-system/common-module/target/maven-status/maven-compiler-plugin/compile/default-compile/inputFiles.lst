@@ -1,0 +1,8 @@
+/home/runner/workspace/shift-management-system/common-module/src/main/java/com/shiftmanager/common/model/Address.java
+/home/runner/workspace/shift-management-system/common-module/src/main/java/com/shiftmanager/common/config/SecurityConfig.java
+/home/runner/workspace/shift-management-system/common-module/src/main/java/com/shiftmanager/common/model/Person.java
+/home/runner/workspace/shift-management-system/common-module/src/main/java/com/shiftmanager/common/exception/ApiError.java
+/home/runner/workspace/shift-management-system/common-module/src/main/java/com/shiftmanager/common/model/Location.java
+/home/runner/workspace/shift-management-system/common-module/src/main/java/com/shiftmanager/common/config/JpaAuditingConfig.java
+/home/runner/workspace/shift-management-system/common-module/src/main/java/com/shiftmanager/common/model/BaseEntity.java
+/home/runner/workspace/shift-management-system/common-module/src/main/java/com/shiftmanager/common/exception/GlobalExceptionHandler.java
