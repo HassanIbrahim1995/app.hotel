@@ -182,7 +182,7 @@ public class ShiftServiceImpl implements ShiftService {
         // Save updated employee shift
         employeeShift = employeeShiftRepository.save(employeeShift);
         
-        return employeeShiftMapper.toDTO(employeeShift);
+        return employeeShiftMapper.toDto(employeeShift);
     }
 
     @Override

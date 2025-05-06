@@ -19,3 +19,4 @@ public class ShiftManagementApiApplication {
         SpringApplication.run(ShiftManagementApiApplication.class, args);
     }
 }
+

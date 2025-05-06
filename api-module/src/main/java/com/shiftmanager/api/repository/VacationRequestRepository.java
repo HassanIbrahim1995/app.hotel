@@ -135,4 +135,6 @@ public interface VacationRequestRepository extends JpaRepository<VacationRequest
             "(vr.endDate BETWEEN :startDate AND :endDate) OR " +
             "(:startDate BETWEEN vr.startDate AND vr.endDate))")
     List<VacationRequest> findByEmployeeAndStatusAndDateRange(Employee employee, String status, LocalDate startDate, LocalDate endDate);
+
+    List<VacationRequest> findByDepartmentAndDateRange(Long departmentId, LocalDate startDate, LocalDate endDate);
 }

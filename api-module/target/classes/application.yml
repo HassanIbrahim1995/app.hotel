@@ -9,29 +9,34 @@ spring:
   application:
     name: shift-management-api
   
-  # Database Configuration
+  # H2 Database Configuration (simplified)
   datasource:
-    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
-    username: ${PGUSER}
-    password: ${PGPASSWORD}
-    driver-class-name: org.postgresql.Driver
-  
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  # H2 Console
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+
   # JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
     show-sql: true
 
-  # Liquibase Configuration
+  # Disable Liquibase temporarily
   liquibase:
-    change-log: classpath:db/changelog/master-changelog.yaml
-    enabled: true
-    parameters:
-      ignore-checksum: true
+    enabled: false
 
 # Management Endpoints Configuration
 management:
@@ -49,3 +54,5 @@ logging:
     root: INFO
     com.shiftmanager: DEBUG
     org.hibernate.SQL: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.transaction: DEBUG

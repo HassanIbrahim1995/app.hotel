@@ -100,4 +100,6 @@ public interface EmployeeShiftRepository extends JpaRepository<EmployeeShift, Lo
         @Param("shiftDate") LocalDate shiftDate,
         @Param("startTime") LocalTime startTime,
         @Param("endTime") LocalTime endTime);
+
+    List<EmployeeShift> findByEmployeeAndShift_ShiftDate(Employee employee, LocalDate shiftDate);
 }
