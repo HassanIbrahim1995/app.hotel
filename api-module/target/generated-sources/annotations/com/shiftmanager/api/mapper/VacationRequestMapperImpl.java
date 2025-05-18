@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-06T01:20:51+0200",
+    date = "2025-05-11T01:56:19+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
@@ -47,6 +47,7 @@ public class VacationRequestMapperImpl extends VacationRequestMapper {
 
         VacationRequest vacationRequest = new VacationRequest();
 
+        vacationRequest.setReason( dto.getStatus() );
         vacationRequest.setId( dto.getId() );
         vacationRequest.setStartDate( dto.getStartDate() );
         vacationRequest.setEndDate( dto.getEndDate() );
@@ -54,6 +55,10 @@ public class VacationRequestMapperImpl extends VacationRequestMapper {
         vacationRequest.setRequestNotes( dto.getRequestNotes() );
         vacationRequest.setReviewNotes( dto.getReviewNotes() );
         vacationRequest.setReviewedAt( dto.getReviewedAt() );
+
+        vacationRequest.setReviewedBy( mapReviewerIdToEmployee(dto.getReviewerId()) );
+        vacationRequest.setReviewDate( java.time.LocalDate.now() );
+        vacationRequest.setRequestDate( java.time.LocalDate.now() );
 
         setRelations( dto, vacationRequest );
 
@@ -66,6 +71,7 @@ public class VacationRequestMapperImpl extends VacationRequestMapper {
             return request;
         }
 
+        request.setReason( dto.getStatus() );
         request.setId( dto.getId() );
         request.setStartDate( dto.getStartDate() );
         request.setEndDate( dto.getEndDate() );
@@ -73,6 +79,10 @@ public class VacationRequestMapperImpl extends VacationRequestMapper {
         request.setRequestNotes( dto.getRequestNotes() );
         request.setReviewNotes( dto.getReviewNotes() );
         request.setReviewedAt( dto.getReviewedAt() );
+
+        request.setReviewedBy( mapReviewerIdToEmployee(dto.getReviewerId()) );
+        request.setReviewDate( request.getReviewDate() != null ? request.getReviewDate() : java.time.LocalDate.now() );
+        request.setRequestDate( request.getRequestDate() != null ? request.getRequestDate() : java.time.LocalDate.now() );
 
         setRelations( dto, request );
 

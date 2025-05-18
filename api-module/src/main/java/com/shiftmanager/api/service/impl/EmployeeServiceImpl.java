@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +29,7 @@ import com.shiftmanager.api.repository.VacationRequestRepository;
 import com.shiftmanager.api.service.EmployeeService;
 
 @Service
+@AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
@@ -35,19 +37,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final VacationRequestRepository vacationRequestRepository;
     private final NotificationRepository notificationRepository;
     private final EmployeeShiftRepository employeeShiftRepository;
-
-    @Autowired
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, 
-                               EmployeeMapper employeeMapper,
-                               VacationRequestRepository vacationRequestRepository,
-                               NotificationRepository notificationRepository,
-                               EmployeeShiftRepository employeeShiftRepository) {
-        this.employeeRepository = employeeRepository;
-        this.employeeMapper = employeeMapper;
-        this.vacationRequestRepository = vacationRequestRepository;
-        this.notificationRepository = notificationRepository;
-        this.employeeShiftRepository = employeeShiftRepository;
-    }
 
     @Override
     @Transactional(readOnly = true)

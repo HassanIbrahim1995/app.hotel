@@ -9,6 +9,8 @@ import com.shiftmanager.api.repository.EmployeeRepository;
 import com.shiftmanager.api.repository.VacationRequestRepository;
 import com.shiftmanager.api.service.NotificationService;
 import com.shiftmanager.api.service.VacationRequestService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,25 +28,18 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@AllArgsConstructor
+@Slf4j
 public class VacationRequestServiceImpl implements VacationRequestService {
     
-    private static final Logger logger = LoggerFactory.getLogger(VacationRequestServiceImpl.class);
-    
-    @Autowired
     private VacationRequestRepository vacationRequestRepository;
-    
-    @Autowired
     private EmployeeRepository employeeRepository;
-    
-    @Autowired
     private VacationRequestMapper vacationRequestMapper;
-    
-    @Autowired
     private NotificationService notificationService;
     
     @Override
     public List<VacationRequestDTO> getAllVacationRequests() {
-        logger.debug("Getting all vacation requests");
+        log.debug("Getting all vacation requests");
         return vacationRequestRepository.findAll().stream()
                 .map(vacationRequestMapper::toDto)
                 .collect(Collectors.toList());
@@ -52,14 +47,14 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public VacationRequest getVacationRequestById(Long id) {
-        logger.debug("Getting vacation request with ID: {}", id);
+        log.debug("Getting vacation request with ID: {}", id);
         return vacationRequestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + id));
     }
     
     @Override
     public VacationRequestDTO createVacationRequest(VacationRequestDTO vacationRequestDTO) {
-        logger.debug("Creating new vacation request: {}", vacationRequestDTO);
+        log.debug("Creating new vacation request: {}", vacationRequestDTO);
         
         // Get the employee
         Employee employee = employeeRepository.findById(vacationRequestDTO.getEmployeeId())
@@ -98,7 +93,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public VacationRequest updateVacationRequest(Long id, VacationRequest vacationRequest) {
-        logger.debug("Updating vacation request with ID: {}", id);
+        log.debug("Updating vacation request with ID: {}", id);
         
         VacationRequest existingRequest = vacationRequestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + id));
@@ -117,7 +112,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public void deleteVacationRequest(Long id) {
-        logger.debug("Deleting vacation request with ID: {}", id);
+        log.debug("Deleting vacation request with ID: {}", id);
         
         VacationRequest vacationRequest = vacationRequestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + id));
@@ -132,7 +127,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public List<VacationRequestDTO> getPendingVacationRequestsForManager(Long managerId) {
-        logger.debug("Getting pending vacation requests for manager ID: {}", managerId);
+        log.debug("Getting pending vacation requests for manager ID: {}", managerId);
         
         Employee manager = employeeRepository.findById(managerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Manager not found with ID: " + managerId));
@@ -144,7 +139,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public VacationRequestDTO approveVacationRequest(Long requestId, Long reviewerId, String notes) {
-        logger.debug("Approving vacation request ID: {} by reviewer ID: {}", requestId, reviewerId);
+        log.debug("Approving vacation request ID: {} by reviewer ID: {}", requestId, reviewerId);
         
         VacationRequest vacationRequest = vacationRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + requestId));
@@ -172,7 +167,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public VacationRequestDTO rejectVacationRequest(Long requestId, Long reviewerId, String notes) {
-        logger.debug("Rejecting vacation request ID: {} by reviewer ID: {}", requestId, reviewerId);
+        log.debug("Rejecting vacation request ID: {} by reviewer ID: {}", requestId, reviewerId);
         
         VacationRequest vacationRequest = vacationRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + requestId));
@@ -200,7 +195,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public List<VacationRequestDTO> getVacationRequestsByDateRange(LocalDate startDate, LocalDate endDate) {
-        logger.debug("Getting vacation requests from {} to {}", startDate, endDate);
+        log.debug("Getting vacation requests from {} to {}", startDate, endDate);
         
         return vacationRequestRepository.findByDateRange(startDate, endDate).stream()
                 .map(vacationRequestMapper::toDto)
@@ -209,7 +204,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public byte[] generateVacationCalendar(Long locationId, LocalDate startDate, LocalDate endDate) {
-        logger.debug("Generating vacation calendar for location ID: {} from {} to {}", locationId, startDate, endDate);
+        log.debug("Generating vacation calendar for location ID: {} from {} to {}", locationId, startDate, endDate);
         
         // This would typically integrate with a calendar generation library
         // For now, we'll return a placeholder
@@ -218,7 +213,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public void cancelVacationRequest(Long id) {
-        logger.debug("Canceling vacation request with ID: {}", id);
+        log.debug("Canceling vacation request with ID: {}", id);
         
         VacationRequest vacationRequest = vacationRequestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacation request not found with ID: " + id));
@@ -234,7 +229,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public List<VacationRequest> getAllVacationRequests(LocalDate startDate, LocalDate endDate, String status) {
-        logger.debug("Getting all vacation requests with filters - startDate: {}, endDate: {}, status: {}", 
+        log.debug("Getting all vacation requests with filters - startDate: {}, endDate: {}, status: {}",
                  startDate, endDate, status);
         
         if (startDate != null && endDate != null) {
@@ -252,7 +247,7 @@ public class VacationRequestServiceImpl implements VacationRequestService {
     
     @Override
     public boolean hasVacationConflicts(Long employeeId, LocalDate startDate, LocalDate endDate, Long excludeRequestId) {
-        logger.debug("Checking vacation conflicts for employee ID: {} from {} to {}, excluding request ID: {}",
+        log.debug("Checking vacation conflicts for employee ID: {} from {} to {}, excluding request ID: {}",
                  employeeId, startDate, endDate, excludeRequestId);
         
         Employee employee = employeeRepository.findById(employeeId)

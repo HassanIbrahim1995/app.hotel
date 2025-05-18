@@ -8,31 +8,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-06T01:20:51+0200",
+    date = "2025-05-11T01:56:19+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
 public class CalendarEntryMapperImpl implements CalendarEntryMapper {
-
-    @Override
-    public CalendarEntry updateEntityFromDto(CalendarEntryDTO dto, CalendarEntry entity) {
-        if ( dto == null ) {
-            return entity;
-        }
-
-        entity.setId( dto.getId() );
-        entity.setEntryDate( dto.getEntryDate() );
-        entity.setStartTime( dto.getStartTime() );
-        entity.setEndTime( dto.getEndTime() );
-        entity.setEntryType( dto.getEntryType() );
-        entity.setTitle( dto.getTitle() );
-        entity.setDescription( dto.getDescription() );
-        entity.setAllDay( dto.isAllDay() );
-        entity.setReferenceId( dto.getReferenceId() );
-        entity.setColor( dto.getColor() );
-
-        return entity;
-    }
 
     @Override
     public CalendarEntryDTO toDto(CalendarEntry entity) {
@@ -76,7 +56,35 @@ public class CalendarEntryMapperImpl implements CalendarEntryMapper {
         calendarEntry.setReferenceId( dto.getReferenceId() );
         calendarEntry.setColor( dto.getColor() );
 
+        calendarEntry.setVersion( (long) 0L );
+        calendarEntry.setCreatedAt( java.time.LocalDateTime.now() );
+        calendarEntry.setUpdatedAt( java.time.LocalDateTime.now() );
+
         return calendarEntry;
+    }
+
+    @Override
+    public CalendarEntry updateEntityFromDto(CalendarEntryDTO dto, CalendarEntry entity) {
+        if ( dto == null ) {
+            return entity;
+        }
+
+        entity.setId( dto.getId() );
+        entity.setEntryDate( dto.getEntryDate() );
+        entity.setStartTime( dto.getStartTime() );
+        entity.setEndTime( dto.getEndTime() );
+        entity.setEntryType( dto.getEntryType() );
+        entity.setTitle( dto.getTitle() );
+        entity.setDescription( dto.getDescription() );
+        entity.setAllDay( dto.isAllDay() );
+        entity.setReferenceId( dto.getReferenceId() );
+        entity.setColor( dto.getColor() );
+
+        entity.setVersion( entity.getVersion() + 1 );
+        entity.setCreatedAt( entity.getCreatedAt() );
+        entity.setUpdatedAt( java.time.LocalDateTime.now() );
+
+        return entity;
     }
 
     private Long entityCalendarId(CalendarEntry calendarEntry) {

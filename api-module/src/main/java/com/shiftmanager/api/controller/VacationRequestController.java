@@ -4,6 +4,7 @@ import com.shiftmanager.api.dto.VacationRequestDTO;
 import com.shiftmanager.api.mapper.VacationRequestMapper;
 import com.shiftmanager.api.model.VacationRequest;
 import com.shiftmanager.api.service.VacationRequestService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,10 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/vacation-requests")
+@AllArgsConstructor
 public class VacationRequestController {
 
-    @Autowired
     private VacationRequestService vacationRequestService;
-
-    @Autowired
     private VacationRequestMapper vacationRequestMapper;
 
     /**

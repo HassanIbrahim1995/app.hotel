@@ -3,6 +3,7 @@ package com.shiftmanager.api.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,16 +16,11 @@ import com.shiftmanager.api.repository.ShiftTypeRepository;
 import com.shiftmanager.api.service.ShiftTypeService;
 
 @Service
+@AllArgsConstructor
 public class ShiftTypeServiceImpl implements ShiftTypeService {
 
     private final ShiftTypeRepository shiftTypeRepository;
     private final ShiftTypeMapper shiftTypeMapper;
-
-    @Autowired
-    public ShiftTypeServiceImpl(ShiftTypeRepository shiftTypeRepository, ShiftTypeMapper shiftTypeMapper) {
-        this.shiftTypeRepository = shiftTypeRepository;
-        this.shiftTypeMapper = shiftTypeMapper;
-    }
 
     @Override
     @Transactional(readOnly = true)

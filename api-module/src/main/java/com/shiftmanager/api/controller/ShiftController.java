@@ -3,6 +3,7 @@ package com.shiftmanager.api.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -25,14 +26,10 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/shifts")
+@AllArgsConstructor
 public class ShiftController {
     
     private final ShiftService shiftService;
-    
-    @Autowired
-    public ShiftController(ShiftService shiftService) {
-        this.shiftService = shiftService;
-    }
     
     @GetMapping
     public ResponseEntity<List<ShiftDTO>> getAllShifts(

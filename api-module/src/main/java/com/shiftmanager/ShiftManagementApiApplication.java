@@ -1,4 +1,4 @@
-package com.shiftmanager.api;
+package com.shiftmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

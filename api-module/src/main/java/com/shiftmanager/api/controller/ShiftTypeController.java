@@ -2,6 +2,7 @@ package com.shiftmanager.api.controller;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,10 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/shift-types")
+@AllArgsConstructor
 public class ShiftTypeController {
     
     private final ShiftTypeService shiftTypeService;
-    
-    @Autowired
-    public ShiftTypeController(ShiftTypeService shiftTypeService) {
-        this.shiftTypeService = shiftTypeService;
-    }
     
     @GetMapping
     public ResponseEntity<List<ShiftTypeDTO>> getAllShiftTypes() {

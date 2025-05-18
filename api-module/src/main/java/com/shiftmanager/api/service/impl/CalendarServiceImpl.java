@@ -4,6 +4,8 @@ import com.shiftmanager.api.exception.ResourceNotFoundException;
 import com.shiftmanager.api.model.*;
 import com.shiftmanager.api.repository.*;
 import com.shiftmanager.api.service.CalendarService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,38 +21,27 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@AllArgsConstructor
+@Slf4j
 public class CalendarServiceImpl implements CalendarService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CalendarServiceImpl.class);
-
-    @Autowired
     private CalendarRepository calendarRepository;
-
-    @Autowired
     private CalendarEntryRepository calendarEntryRepository;
-
-    @Autowired
     private EmployeeRepository employeeRepository;
-
-    @Autowired
     private EmployeeShiftRepository employeeShiftRepository;
-
-    @Autowired
     private ShiftRepository shiftRepository;
-
-    @Autowired
     private VacationRequestRepository vacationRequestRepository;
 
     @Override
     public Calendar getCalendarById(Long calendarId) {
-        logger.debug("Getting calendar with ID: {}", calendarId);
+        log.debug("Getting calendar with ID: {}", calendarId);
         return calendarRepository.findById(calendarId)
                 .orElseThrow(() -> new ResourceNotFoundException("Calendar not found with ID: " + calendarId));
     }
 
     @Override
     public Calendar getCalendarByEmployeeId(Long employeeId) {
-        logger.debug("Getting calendar for employee ID: {}", employeeId);
+        log.debug("Getting calendar for employee ID: {}", employeeId);
         return calendarRepository.findByEmployeeId(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Calendar not found for employee with ID: " + employeeId));
@@ -58,7 +49,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public Calendar getOrCreateCalendarForEmployee(Long employeeId) {
-        logger.debug("Getting or creating calendar for employee ID: {}", employeeId);
+        log.debug("Getting or creating calendar for employee ID: {}", employeeId);
         
         // Try to find existing calendar
         return calendarRepository.findByEmployeeId(employeeId)
@@ -79,7 +70,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public List<CalendarEntry> getCalendarEntries(Long calendarId) {
-        logger.debug("Getting all entries for calendar ID: {}", calendarId);
+        log.debug("Getting all entries for calendar ID: {}", calendarId);
         // Verify calendar exists
         if (!calendarRepository.existsById(calendarId)) {
             throw new ResourceNotFoundException("Calendar not found with ID: " + calendarId);
@@ -89,7 +80,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public List<CalendarEntry> getCalendarEntriesForDate(Long calendarId, LocalDate date) {
-        logger.debug("Getting entries for calendar ID: {} and date: {}", calendarId, date);
+        log.debug("Getting entries for calendar ID: {} and date: {}", calendarId, date);
         // Verify calendar exists
         if (!calendarRepository.existsById(calendarId)) {
             throw new ResourceNotFoundException("Calendar not found with ID: " + calendarId);
@@ -99,7 +90,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public List<CalendarEntry> getCalendarEntriesForDateRange(Long calendarId, LocalDate startDate, LocalDate endDate) {
-        logger.debug("Getting entries for calendar ID: {} between {} and {}", calendarId, startDate, endDate);
+        log.debug("Getting entries for calendar ID: {} between {} and {}", calendarId, startDate, endDate);
         // Verify calendar exists
         if (!calendarRepository.existsById(calendarId)) {
             throw new ResourceNotFoundException("Calendar not found with ID: " + calendarId);
@@ -109,7 +100,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public List<CalendarEntry> getCalendarEntriesByType(Long calendarId, String entryType) {
-        logger.debug("Getting entries for calendar ID: {} with type: {}", calendarId, entryType);
+        log.debug("Getting entries for calendar ID: {} with type: {}", calendarId, entryType);
         // Verify calendar exists
         if (!calendarRepository.existsById(calendarId)) {
             throw new ResourceNotFoundException("Calendar not found with ID: " + calendarId);
@@ -119,7 +110,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public CalendarEntry addCalendarEntry(Long calendarId, CalendarEntry entry) {
-        logger.debug("Adding entry to calendar ID: {}", calendarId);
+        log.debug("Adding entry to calendar ID: {}", calendarId);
         
         Calendar calendar = calendarRepository.findById(calendarId)
                 .orElseThrow(() -> new ResourceNotFoundException("Calendar not found with ID: " + calendarId));
@@ -130,7 +121,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public CalendarEntry updateCalendarEntry(Long entryId, CalendarEntry updatedEntry) {
-        logger.debug("Updating calendar entry ID: {}", entryId);
+        log.debug("Updating calendar entry ID: {}", entryId);
         
         CalendarEntry existingEntry = calendarEntryRepository.findById(entryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Calendar entry not found with ID: " + entryId));
@@ -150,7 +141,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public boolean deleteCalendarEntry(Long entryId) {
-        logger.debug("Deleting calendar entry ID: {}", entryId);
+        log.debug("Deleting calendar entry ID: {}", entryId);
         
         if (!calendarEntryRepository.existsById(entryId)) {
             throw new ResourceNotFoundException("Calendar entry not found with ID: " + entryId);
@@ -162,7 +153,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public int syncEmployeeShiftsToCalendar(Long employeeId) {
-        logger.debug("Syncing shifts to calendar for employee ID: {}", employeeId);
+        log.debug("Syncing shifts to calendar for employee ID: {}", employeeId);
         
         Calendar calendar = getOrCreateCalendarForEmployee(employeeId);
         Employee employee = calendar.getEmployee();
@@ -186,14 +177,14 @@ public class CalendarServiceImpl implements CalendarService {
                 entriesCreated++;
             }
         }
-        
-        logger.info("Created {} new calendar entries for employee ID: {}", entriesCreated, employeeId);
+
+        log.info("Created {} new calendar entries for employee ID: {}", entriesCreated, employeeId);
         return entriesCreated;
     }
 
     @Override
     public int syncEmployeeVacationRequestsToCalendar(Long employeeId) {
-        logger.debug("Syncing vacation requests to calendar for employee ID: {}", employeeId);
+        log.debug("Syncing vacation requests to calendar for employee ID: {}", employeeId);
         
         Calendar calendar = getOrCreateCalendarForEmployee(employeeId);
         Employee employee = calendar.getEmployee();
@@ -231,14 +222,14 @@ public class CalendarServiceImpl implements CalendarService {
                 }
             }
         }
-        
-        logger.info("Created {} new vacation calendar entries for employee ID: {}", entriesCreated, employeeId);
+
+        log.info("Created {} new vacation calendar entries for employee ID: {}", entriesCreated, employeeId);
         return entriesCreated;
     }
 
     @Override
     public List<Calendar> getTeamCalendars(Long managerId) {
-        logger.debug("Getting team calendars for manager ID: {}", managerId);
+        log.debug("Getting team calendars for manager ID: {}", managerId);
         
         // Verify the manager exists
         if (!employeeRepository.existsById(managerId)) {
@@ -250,13 +241,13 @@ public class CalendarServiceImpl implements CalendarService {
     
     @Override
     public List<Calendar> getAllCalendars() {
-        logger.debug("Getting all calendars");
+        log.debug("Getting all calendars");
         return calendarRepository.findAll();
     }
     
     @Override
     public CalendarEntry createCalendarEntry(Long calendarId, CalendarEntry entry) {
-        logger.debug("Creating calendar entry for calendar ID: {}", calendarId);
+        log.debug("Creating calendar entry for calendar ID: {}", calendarId);
         
         Calendar calendar = calendarRepository.findById(calendarId)
                 .orElseThrow(() -> new ResourceNotFoundException("Calendar not found with ID: " + calendarId));
@@ -267,7 +258,7 @@ public class CalendarServiceImpl implements CalendarService {
     
     @Override
     public CalendarEntry updateCalendarEntry(Long calendarId, Long entryId, CalendarEntry entry) {
-        logger.debug("Updating entry ID: {} in calendar ID: {}", entryId, calendarId);
+        log.debug("Updating entry ID: {} in calendar ID: {}", entryId, calendarId);
         
         // Verify calendar exists
         if (!calendarRepository.existsById(calendarId)) {
@@ -297,7 +288,7 @@ public class CalendarServiceImpl implements CalendarService {
     
     @Override
     public boolean deleteCalendarEntry(Long calendarId, Long entryId) {
-        logger.debug("Deleting entry ID: {} from calendar ID: {}", entryId, calendarId);
+        log.debug("Deleting entry ID: {} from calendar ID: {}", entryId, calendarId);
         
         // Verify calendar exists
         if (!calendarRepository.existsById(calendarId)) {
@@ -318,7 +309,7 @@ public class CalendarServiceImpl implements CalendarService {
     
     @Override
     public List<CalendarEntry> getCalendarEntries(Long calendarId, LocalDate startDate, LocalDate endDate) {
-        logger.debug("Getting entries for calendar ID: {} between {} and {}", calendarId, startDate, endDate);
+        log.debug("Getting entries for calendar ID: {} between {} and {}", calendarId, startDate, endDate);
         
         // Verify calendar exists
         if (!calendarRepository.existsById(calendarId)) {
@@ -330,7 +321,7 @@ public class CalendarServiceImpl implements CalendarService {
     
     @Override
     public byte[] exportCalendarToPdf(Long employeeId, Integer month, Integer year) {
-        logger.debug("Exporting calendar to PDF for employee ID: {}, month: {}, year: {}", employeeId, month, year);
+        log.debug("Exporting calendar to PDF for employee ID: {}, month: {}, year: {}", employeeId, month, year);
         
         // Get employee calendar
         Calendar calendar = getOrCreateCalendarForEmployee(employeeId);
@@ -358,7 +349,7 @@ public class CalendarServiceImpl implements CalendarService {
     
     @Override
     public List<CalendarEntry> getEmployeeCalendar(Long employeeId, Integer month, Integer year) {
-        logger.debug("Getting calendar for employee ID: {}, month: {}, year: {}", employeeId, month, year);
+        log.debug("Getting calendar for employee ID: {}, month: {}, year: {}", employeeId, month, year);
         
         // Get employee calendar
         Calendar calendar = getOrCreateCalendarForEmployee(employeeId);

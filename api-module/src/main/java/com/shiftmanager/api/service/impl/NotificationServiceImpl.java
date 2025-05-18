@@ -11,6 +11,8 @@ import com.shiftmanager.api.repository.NotificationRepository;
 import com.shiftmanager.api.repository.ShiftRepository;
 import com.shiftmanager.api.repository.VacationRequestRepository;
 import com.shiftmanager.api.service.NotificationService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +32,13 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@AllArgsConstructor
+@Slf4j
 public class NotificationServiceImpl implements NotificationService {
     
-    private static final Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
-    
-    @Autowired
     private NotificationRepository notificationRepository;
-    
-    @Autowired
     private EmployeeRepository employeeRepository;
-    
-    @Autowired
     private ShiftRepository shiftRepository;
-    
-    @Autowired
     private VacationRequestRepository vacationRequestRepository;
     
     // Email functionality will be implemented later
@@ -52,7 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     public List<NotificationDTO> getNotificationsForEmployee(Long employeeId) {
-        logger.debug("Getting notifications for employee ID: {}", employeeId);
+        log.debug("Getting notifications for employee ID: {}", employeeId);
         
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + employeeId));
@@ -65,7 +60,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     public List<NotificationDTO> getUnreadNotificationsForEmployee(Long employeeId) {
-        logger.debug("Getting unread notifications for employee ID: {}", employeeId);
+        log.debug("Getting unread notifications for employee ID: {}", employeeId);
         
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + employeeId));
@@ -78,7 +73,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     public NotificationDTO markNotificationAsRead(Long notificationId) {
-        logger.debug("Marking notification as read, ID: {}", notificationId);
+        log.debug("Marking notification as read, ID: {}", notificationId);
         
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Notification not found with ID: " + notificationId));
@@ -92,7 +87,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     public NotificationDTO createNotification(Long employeeId, String message, String type, Long referenceId) {
-        logger.debug("Creating notification for employee ID: {}, type: {}", employeeId, type);
+        log.debug("Creating notification for employee ID: {}, type: {}", employeeId, type);
         
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + employeeId));
@@ -110,7 +105,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     public void deleteNotification(Long notificationId) {
-        logger.debug("Deleting notification with ID: {}", notificationId);
+        log.debug("Deleting notification with ID: {}", notificationId);
         
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Notification not found with ID: " + notificationId));
@@ -120,7 +115,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     public void deleteAllNotificationsForEmployee(Long employeeId) {
-        logger.debug("Deleting all notifications for employee ID: {}", employeeId);
+        log.debug("Deleting all notifications for employee ID: {}", employeeId);
         
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + employeeId));
@@ -130,17 +125,17 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     public boolean sendEmailNotification(String email, String subject, String content) {
-        logger.debug("Sending email notification to: {}, subject: {}", email, subject);
+        log.debug("Sending email notification to: {}, subject: {}", email, subject);
         
         // Email functionality will be implemented later
-        logger.info("Would send email to {} with subject: {}", email, subject);
-        logger.info("Email content: {}", content);
+        log.info("Would send email to {} with subject: {}", email, subject);
+        log.info("Email content: {}", content);
         return true;
     }
     
     @Override
     public NotificationDTO sendShiftAssignmentNotification(Long employeeId, Long shiftId) {
-        logger.debug("Sending shift assignment notification to employee ID: {} for shift ID: {}", employeeId, shiftId);
+        log.debug("Sending shift assignment notification to employee ID: {} for shift ID: {}", employeeId, shiftId);
         
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with ID: " + employeeId));
@@ -165,7 +160,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     public NotificationDTO sendVacationRequestStatusNotification(Long employeeId, Long vacationRequestId, boolean approved) {
-        logger.debug("Sending vacation request {} notification to employee ID: {} for request ID: {}",
+        log.debug("Sending vacation request {} notification to employee ID: {} for request ID: {}",
                 approved ? "approval" : "rejection", employeeId, vacationRequestId);
         
         Employee employee = employeeRepository.findById(employeeId)

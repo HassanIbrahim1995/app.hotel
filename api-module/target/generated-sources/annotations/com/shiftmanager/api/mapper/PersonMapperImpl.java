@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-06T01:20:51+0200",
+    date = "2025-05-11T01:56:19+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
@@ -38,11 +38,31 @@ public class PersonMapperImpl implements PersonMapper {
 
         Employee employee = new Employee();
 
+        employee.setAddress( idToAddress( personDTO.getId() ) );
+        if ( personDTO.getId() != null ) {
+            employee.setEmployeeId( String.valueOf( personDTO.getId() ) );
+        }
+        employee.setJobTitle( personDTO.getEmail() );
+        employee.setEmployeeNumber( personDTO.getPhoneNumber() );
+        if ( personDTO.getId() != null ) {
+            employee.setPosition( String.valueOf( personDTO.getId() ) );
+        }
+        employee.setDepartment( personDTO.getLastName() );
+        if ( personDTO.getId() != null ) {
+            employee.setNote( String.valueOf( personDTO.getId() ) );
+        }
         employee.setId( personDTO.getId() );
         employee.setFirstName( personDTO.getFirstName() );
         employee.setLastName( personDTO.getLastName() );
         employee.setEmail( personDTO.getEmail() );
         employee.setPhoneNumber( personDTO.getPhoneNumber() );
+
+        employee.setHireDate( java.time.LocalDate.now() );
+        employee.setHourlyRate( (double) 0.0 );
+        employee.setFullTime( true );
+        employee.setMaxHoursPerWeek( 40 );
+        employee.setStatus( "ACTIVE" );
+        employee.setSubordinates( new java.util.ArrayList<>() );
 
         return employee;
     }
@@ -53,11 +73,40 @@ public class PersonMapperImpl implements PersonMapper {
             return person;
         }
 
+        person.setAddress( idToAddress( personDTO.getId() ) );
+        if ( personDTO.getId() != null ) {
+            person.setEmployeeId( String.valueOf( personDTO.getId() ) );
+        }
+        else {
+            person.setEmployeeId( null );
+        }
+        person.setJobTitle( personDTO.getEmail() );
+        person.setEmployeeNumber( personDTO.getPhoneNumber() );
+        if ( personDTO.getId() != null ) {
+            person.setPosition( String.valueOf( personDTO.getId() ) );
+        }
+        else {
+            person.setPosition( null );
+        }
+        person.setDepartment( personDTO.getLastName() );
+        if ( personDTO.getId() != null ) {
+            person.setNote( String.valueOf( personDTO.getId() ) );
+        }
+        else {
+            person.setNote( null );
+        }
         person.setId( personDTO.getId() );
         person.setFirstName( personDTO.getFirstName() );
         person.setLastName( personDTO.getLastName() );
         person.setEmail( personDTO.getEmail() );
         person.setPhoneNumber( personDTO.getPhoneNumber() );
+
+        person.setHireDate( java.time.LocalDate.now() );
+        person.setHourlyRate( (double) 0.0 );
+        person.setFullTime( true );
+        person.setMaxHoursPerWeek( 40 );
+        person.setStatus( "ACTIVE" );
+        person.setSubordinates( person.getSubordinates() );
 
         return person;
     }

@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/reports")
 public class ReportController {
 
-    @Autowired
     private ReportService reportService;
 
     /**

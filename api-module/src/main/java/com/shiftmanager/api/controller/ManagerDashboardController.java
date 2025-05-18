@@ -11,6 +11,7 @@ import com.shiftmanager.api.model.Shift;
 import com.shiftmanager.api.model.VacationRequest;
 import com.shiftmanager.api.service.CalendarService;
 import com.shiftmanager.api.service.ManagerService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -31,24 +32,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/manager/dashboard")
 @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+@AllArgsConstructor
 public class ManagerDashboardController {
 
-    @Autowired
     private ManagerService managerService;
-
-    @Autowired
     private CalendarService calendarService;
-
-    @Autowired
     private EmployeeMapper employeeMapper;
-
-    @Autowired
     private ShiftMapper shiftMapper;
-
-    @Autowired
     private VacationRequestMapper vacationRequestMapper;
-
-    @Autowired
     private CalendarMapper calendarMapper;
 
     /**

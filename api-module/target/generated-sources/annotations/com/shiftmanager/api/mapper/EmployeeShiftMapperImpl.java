@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-06T01:20:51+0200",
+    date = "2025-05-11T01:56:19+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
@@ -44,6 +44,12 @@ public class EmployeeShiftMapperImpl extends EmployeeShiftMapper {
         employeeShift.setId( dto.getId() );
         employeeShift.setStatus( dto.getStatus() );
 
+        employeeShift.setClockInTime( null );
+        employeeShift.setClockOutTime( null );
+        employeeShift.setNote( "" );
+        employeeShift.setAssignedById( null );
+        employeeShift.setAssignedAt( java.time.LocalDateTime.now() );
+
         setRelations( dto, employeeShift );
 
         return employeeShift;
@@ -57,6 +63,12 @@ public class EmployeeShiftMapperImpl extends EmployeeShiftMapper {
 
         shift.setId( dto.getId() );
         shift.setStatus( dto.getStatus() );
+
+        shift.setClockInTime( shift.getClockInTime() );
+        shift.setClockOutTime( shift.getClockOutTime() );
+        shift.setNote( shift.getNote() != null ? shift.getNote() : "" );
+        shift.setAssignedById( shift.getAssignedById() );
+        shift.setAssignedAt( shift.getAssignedAt() != null ? shift.getAssignedAt() : java.time.LocalDateTime.now() );
 
         setRelations( dto, shift );
 

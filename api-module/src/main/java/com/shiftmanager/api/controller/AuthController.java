@@ -5,6 +5,7 @@ import com.shiftmanager.api.dto.LoginResponseDTO;
 import com.shiftmanager.api.model.User;
 import com.shiftmanager.api.repository.UserRepository;
 import com.shiftmanager.api.security.JwtTokenProvider;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,18 +27,12 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/auth")
+@AllArgsConstructor
 public class AuthController {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private JwtTokenProvider tokenProvider;
 
     /**

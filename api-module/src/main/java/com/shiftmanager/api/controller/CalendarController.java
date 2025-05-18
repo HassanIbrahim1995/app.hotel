@@ -7,6 +7,7 @@ import com.shiftmanager.api.mapper.CalendarMapper;
 import com.shiftmanager.api.model.Calendar;
 import com.shiftmanager.api.model.CalendarEntry;
 import com.shiftmanager.api.service.CalendarService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +26,11 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/calendars")
+@AllArgsConstructor
 public class CalendarController {
 
-    @Autowired
     private CalendarService calendarService;
-
-    @Autowired
     private CalendarMapper calendarMapper;
-
-    @Autowired
     private CalendarEntryMapper calendarEntryMapper;
 
     /**

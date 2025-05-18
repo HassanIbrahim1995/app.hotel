@@ -1,15 +1,17 @@
 package com.shiftmanager.api.mapper;
 
+import com.shiftmanager.api.dto.AddressDTO;
 import com.shiftmanager.api.dto.EmployeeDTO;
 import com.shiftmanager.api.model.Address;
 import com.shiftmanager.api.model.Employee;
+import com.shiftmanager.api.model.Location;
 import javax.annotation.processing.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-06T01:20:51+0200",
+    date = "2025-05-11T01:56:19+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
@@ -82,6 +84,11 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
         Employee employee = new Employee();
 
+        if ( employeeDTO.getId() != null ) {
+            employee.setEmployeeId( String.valueOf( employeeDTO.getId() ) );
+        }
+        employee.setJobTitle( employeeDTO.getPosition() );
+        employee.setLocation( addressDTOToLocation( employeeDTO.getAddress() ) );
         employee.setId( employeeDTO.getId() );
         employee.setFirstName( employeeDTO.getFirstName() );
         employee.setLastName( employeeDTO.getLastName() );
@@ -97,6 +104,9 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         employee.setMaxHoursPerWeek( employeeDTO.getMaxHoursPerWeek() );
         employee.setNote( employeeDTO.getNote() );
 
+        employee.setStatus( "ACTIVE" );
+        employee.setSubordinates( new java.util.ArrayList<>() );
+
         return employee;
     }
 
@@ -106,6 +116,22 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             return;
         }
 
+        if ( employeeDTO.getId() != null ) {
+            employee.setEmployeeId( String.valueOf( employeeDTO.getId() ) );
+        }
+        else {
+            employee.setEmployeeId( null );
+        }
+        employee.setJobTitle( employeeDTO.getPosition() );
+        if ( employeeDTO.getAddress() != null ) {
+            if ( employee.getLocation() == null ) {
+                employee.setLocation( new Location() );
+            }
+            addressDTOToLocation1( employeeDTO.getAddress(), employee.getLocation() );
+        }
+        else {
+            employee.setLocation( null );
+        }
         employee.setId( employeeDTO.getId() );
         employee.setFirstName( employeeDTO.getFirstName() );
         employee.setLastName( employeeDTO.getLastName() );
@@ -128,6 +154,9 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         employee.setFullTime( employeeDTO.getFullTime() );
         employee.setMaxHoursPerWeek( employeeDTO.getMaxHoursPerWeek() );
         employee.setNote( employeeDTO.getNote() );
+
+        employee.setStatus( "ACTIVE" );
+        employee.setSubordinates( employee.getSubordinates() );
     }
 
     private Long employeeManagerId(Employee employee) {
@@ -158,5 +187,33 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             return null;
         }
         return fullName;
+    }
+
+    protected Location addressDTOToLocation(AddressDTO addressDTO) {
+        if ( addressDTO == null ) {
+            return null;
+        }
+
+        Location location = new Location();
+
+        location.setId( addressDTO.getId() );
+        location.setCity( addressDTO.getCity() );
+        location.setState( addressDTO.getState() );
+        location.setZipCode( addressDTO.getZipCode() );
+        location.setCountry( addressDTO.getCountry() );
+
+        return location;
+    }
+
+    protected void addressDTOToLocation1(AddressDTO addressDTO, Location mappingTarget) {
+        if ( addressDTO == null ) {
+            return;
+        }
+
+        mappingTarget.setId( addressDTO.getId() );
+        mappingTarget.setCity( addressDTO.getCity() );
+        mappingTarget.setState( addressDTO.getState() );
+        mappingTarget.setZipCode( addressDTO.getZipCode() );
+        mappingTarget.setCountry( addressDTO.getCountry() );
     }
 }

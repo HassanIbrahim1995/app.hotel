@@ -2,6 +2,7 @@ package com.shiftmanager.api.controller;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,10 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/locations")
+@AllArgsConstructor
 public class LocationController {
     
     private final LocationService locationService;
-    
-    @Autowired
-    public LocationController(LocationService locationService) {
-        this.locationService = locationService;
-    }
     
     @GetMapping
     public ResponseEntity<List<LocationDTO>> getAllLocations() {

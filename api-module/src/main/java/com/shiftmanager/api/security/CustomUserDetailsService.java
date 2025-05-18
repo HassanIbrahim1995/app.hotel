@@ -3,6 +3,7 @@ package com.shiftmanager.api.security;
 import com.shiftmanager.api.model.Role;
 import com.shiftmanager.api.model.User;
 import com.shiftmanager.api.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,9 +20,9 @@ import java.util.stream.Collectors;
  * Custom implementation of the UserDetailsService for Spring Security
  */
 @Service
+@AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private UserRepository userRepository;
 
     @Override

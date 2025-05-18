@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-06T01:20:51+0200",
+    date = "2025-05-11T01:56:19+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
@@ -51,6 +51,7 @@ public class ShiftMapperImpl implements ShiftMapper {
 
         Shift shift = new Shift();
 
+        shift.setNotes( shiftDTO.getNote() );
         shift.setId( shiftDTO.getId() );
         shift.setShiftDate( shiftDTO.getShiftDate() );
         shift.setStartTime( shiftDTO.getStartTime() );
@@ -58,6 +59,8 @@ public class ShiftMapperImpl implements ShiftMapper {
         shift.setLocation( locationMapper.toEntity( shiftDTO.getLocation() ) );
         shift.setShiftType( shiftTypeMapper.toEntity( shiftDTO.getShiftType() ) );
         shift.setNote( shiftDTO.getNote() );
+
+        shift.setUpdatedById( (long) 0L );
 
         return shift;
     }
@@ -68,6 +71,7 @@ public class ShiftMapperImpl implements ShiftMapper {
             return;
         }
 
+        shift.setNotes( shiftDTO.getNote() );
         shift.setId( shiftDTO.getId() );
         shift.setShiftDate( shiftDTO.getShiftDate() );
         shift.setStartTime( shiftDTO.getStartTime() );
@@ -91,5 +95,7 @@ public class ShiftMapperImpl implements ShiftMapper {
             shift.setShiftType( null );
         }
         shift.setNote( shiftDTO.getNote() );
+
+        shift.setUpdatedById( (long) 0L );
     }
 }

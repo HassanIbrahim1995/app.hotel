@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +28,7 @@ import com.shiftmanager.api.repository.ShiftTypeRepository;
 import com.shiftmanager.api.service.ShiftService;
 
 @Service
+@AllArgsConstructor
 public class ShiftServiceImpl implements ShiftService {
 
     private final ShiftRepository shiftRepository;
@@ -35,22 +37,6 @@ public class ShiftServiceImpl implements ShiftService {
     private final EmployeeShiftRepository employeeShiftRepository;
     private final ShiftMapper shiftMapper;
     private final EmployeeShiftMapper employeeShiftMapper;
-
-    @Autowired
-    public ShiftServiceImpl(
-            ShiftRepository shiftRepository,
-            LocationRepository locationRepository,
-            ShiftTypeRepository shiftTypeRepository,
-            EmployeeShiftRepository employeeShiftRepository,
-            ShiftMapper shiftMapper,
-            EmployeeShiftMapper employeeShiftMapper) {
-        this.shiftRepository = shiftRepository;
-        this.locationRepository = locationRepository;
-        this.shiftTypeRepository = shiftTypeRepository;
-        this.employeeShiftRepository = employeeShiftRepository;
-        this.shiftMapper = shiftMapper;
-        this.employeeShiftMapper = employeeShiftMapper;
-    }
 
     @Override
     @Transactional(readOnly = true)

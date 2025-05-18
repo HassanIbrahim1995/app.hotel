@@ -6,6 +6,8 @@ import com.shiftmanager.api.model.*;
 import com.shiftmanager.api.repository.*;
 import com.shiftmanager.api.service.ManagerService;
 import com.shiftmanager.api.service.NotificationService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +27,23 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+@AllArgsConstructor
+@Slf4j
 public class ManagerServiceImpl implements ManagerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ManagerServiceImpl.class);
-
-    @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
     private ShiftRepository shiftRepository;
 
-    @Autowired
     private EmployeeShiftRepository employeeShiftRepository;
 
-    @Autowired
     private VacationRequestRepository vacationRequestRepository;
 
-    @Autowired
     private NotificationService notificationService;
 
     @Override
     public boolean assignShiftToEmployee(Long shiftId, Long employeeId, Long managerId) {
-        logger.debug("Manager with ID: {} assigning shift ID: {} to employee ID: {}", managerId, shiftId, employeeId);
+        log.debug("Manager with ID: {} assigning shift ID: {} to employee ID: {}", managerId, shiftId, employeeId);
         
         // Verify manager exists and is authorized
         Employee manager = getAndVerifyManager(managerId);
@@ -97,7 +94,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public boolean unassignShiftFromEmployee(Long shiftId, Long employeeId, Long managerId) {
-        logger.debug("Manager with ID: {} unassigning shift ID: {} from employee ID: {}", managerId, shiftId, employeeId);
+        log.debug("Manager with ID: {} unassigning shift ID: {} from employee ID: {}", managerId, shiftId, employeeId);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);
@@ -134,7 +131,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public Shift adjustEmployeeShift(Long employeeShiftId, Long newShiftId, Long managerId) {
-        logger.debug("Manager with ID: {} adjusting employee shift ID: {} to new shift ID: {}", managerId, employeeShiftId, newShiftId);
+        log.debug("Manager with ID: {} adjusting employee shift ID: {} to new shift ID: {}", managerId, employeeShiftId, newShiftId);
         
         // Verify manager exists and is authorized
         Employee manager = getAndVerifyManager(managerId);
@@ -193,7 +190,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public VacationRequest approveVacationRequest(Long vacationRequestId, Long managerId, String reviewNotes) {
-        logger.debug("Manager with ID: {} approving vacation request ID: {}", managerId, vacationRequestId);
+        log.debug("Manager with ID: {} approving vacation request ID: {}", managerId, vacationRequestId);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);
@@ -241,7 +238,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public VacationRequest rejectVacationRequest(Long vacationRequestId, Long managerId, String reviewNotes) {
-        logger.debug("Manager with ID: {} rejecting vacation request ID: {}", managerId, vacationRequestId);
+        log.debug("Manager with ID: {} rejecting vacation request ID: {}", managerId, vacationRequestId);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);
@@ -279,7 +276,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public List<VacationRequest> getPendingVacationRequestsForTeam(Long managerId) {
-        logger.debug("Getting pending vacation requests for manager ID: {}", managerId);
+        log.debug("Getting pending vacation requests for manager ID: {}", managerId);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);
@@ -298,7 +295,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public List<Employee> getTeamMembers(Long managerId) {
-        logger.debug("Getting team members for manager ID: {}", managerId);
+        log.debug("Getting team members for manager ID: {}", managerId);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);
@@ -309,7 +306,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public List<Shift> getTeamSchedule(Long managerId, LocalDate startDate, LocalDate endDate) {
-        logger.debug("Getting team schedule for manager ID: {} from {} to {}", managerId, startDate, endDate);
+        log.debug("Getting team schedule for manager ID: {} from {} to {}", managerId, startDate, endDate);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);
@@ -328,7 +325,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public Shift createShift(Shift shift, Long managerId) {
-        logger.debug("Manager with ID: {} creating new shift", managerId);
+        log.debug("Manager with ID: {} creating new shift", managerId);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);
@@ -341,7 +338,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public Shift updateShift(Long shiftId, Shift updatedShift, Long managerId) {
-        logger.debug("Manager with ID: {} updating shift ID: {}", managerId, shiftId);
+        log.debug("Manager with ID: {} updating shift ID: {}", managerId, shiftId);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);
@@ -378,7 +375,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public boolean deleteShift(Long shiftId, Long managerId) {
-        logger.debug("Manager with ID: {} deleting shift ID: {}", managerId, shiftId);
+        log.debug("Manager with ID: {} deleting shift ID: {}", managerId, shiftId);
         
         // Verify manager exists and is authorized
         getAndVerifyManager(managerId);

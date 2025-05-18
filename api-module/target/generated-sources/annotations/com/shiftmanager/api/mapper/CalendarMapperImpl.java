@@ -8,24 +8,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-06T01:20:51+0200",
+    date = "2025-05-11T01:56:19+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
 public class CalendarMapperImpl implements CalendarMapper {
-
-    @Override
-    public Calendar updateEntityFromDto(CalendarDTO dto, Calendar entity) {
-        if ( dto == null ) {
-            return entity;
-        }
-
-        entity.setId( dto.getId() );
-        entity.setYear( dto.getYear() );
-        entity.setMonth( dto.getMonth() );
-
-        return entity;
-    }
 
     @Override
     public CalendarDTO toDto(Calendar entity) {
@@ -57,7 +44,30 @@ public class CalendarMapperImpl implements CalendarMapper {
         calendar.setYear( dto.getYear() );
         calendar.setMonth( dto.getMonth() );
 
+        calendar.setEntries( new ArrayList<>() );
+        calendar.setVersion( (long) 0L );
+        calendar.setCreatedAt( java.time.LocalDateTime.now() );
+        calendar.setUpdatedAt( java.time.LocalDateTime.now() );
+
         return calendar;
+    }
+
+    @Override
+    public Calendar updateEntityFromDto(CalendarDTO dto, Calendar entity) {
+        if ( dto == null ) {
+            return entity;
+        }
+
+        entity.setId( dto.getId() );
+        entity.setYear( dto.getYear() );
+        entity.setMonth( dto.getMonth() );
+
+        entity.setEntries( entity.getEntries() );
+        entity.setVersion( entity.getVersion() + 1 );
+        entity.setCreatedAt( entity.getCreatedAt() );
+        entity.setUpdatedAt( java.time.LocalDateTime.now() );
+
+        return entity;
     }
 
     private Long entityEmployeeId(Calendar calendar) {

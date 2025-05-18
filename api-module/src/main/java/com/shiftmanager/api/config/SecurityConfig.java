@@ -2,6 +2,7 @@ package com.shiftmanager.api.config;
 
 import com.shiftmanager.api.security.JwtAuthenticationEntryPoint;
 import com.shiftmanager.api.security.JwtAuthenticationFilter;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +29,9 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
